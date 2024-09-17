@@ -10,7 +10,7 @@ type SignInData = {
 export default function Login() {
   const { register, handleSubmit } = useForm<SignInData>(); 
   const { signIn } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para mensagem de erro
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function handleSignIn(data: SignInData) {
     try {
@@ -21,13 +21,19 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center flex-col py-12 px-4 bg">
+    <div className="relative min-h-screen flex items-center justify-center flex-col py-12 px-4 bg">
 
+      <header className='absolute top-0 left-0 w-full flex items-center justify-between px-16 py-3'>
+        <div className='w-1/2'>
+          <h1 className='text-2xl text-white font-bold'>Tech fix FR</h1>
+        </div>
+      </header>
+
+
+      <form className="w-[350px] gap-3 " onSubmit={handleSubmit(handleSignIn)}>
       <h2 className="mt-6 text-center text-4xl font-bold text-white">
         TechFix Login
       </h2>
-
-      <form className="w-[350px] gap-3 " onSubmit={handleSubmit(handleSignIn)}>
         <div>
           <input
             {...register('email')}

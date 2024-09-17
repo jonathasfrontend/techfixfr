@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
-import { Plus } from '@phosphor-icons/react';
+import { AddNew } from '../components/forms/AddNew';
 
 interface ClienteData {
   cliente: {
@@ -44,6 +46,7 @@ export default function Dashboard() {
 
   return (
     <div className='min-h-screen bg'>
+
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2'>
           <h1 className='text-2xl text-white font-bold'>Tech fix FR Dashboard</h1>
@@ -61,9 +64,14 @@ export default function Dashboard() {
             />
           </div>
           <div>
-            <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-              <Plus className='w-6 h-6 text-white' />
-            </button>
+          <Dialog.Root> 
+            <Dialog.Trigger asChild className='cursor-pointer'>
+              <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                <Plus className='w-6 h-6 text-white' />
+              </button>
+            </Dialog.Trigger>
+            <AddNew />
+          </Dialog.Root>
           </div>
         </div>
       </header>

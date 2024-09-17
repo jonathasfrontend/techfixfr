@@ -7,6 +7,8 @@ import { api } from "../services/api";
 import { CaretLeft, CircleNotch, Plus } from '@phosphor-icons/react';
 import { CardUserAccordion } from '../components/CardUserAccordion';
 import { IconUser } from '../components/IconUser';
+import * as Dialog from '@radix-ui/react-dialog';
+import { NewOrder } from '../components/forms/NewOrder';
 
 interface ClienteData {
   cpf: string;
@@ -79,9 +81,14 @@ export default function User() {
             />
           </div>
           <div>
-            <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-              <Plus className='w-6 h-6 text-white' />
-            </button>
+          <Dialog.Root> 
+            <Dialog.Trigger asChild className='cursor-pointer'>
+              <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                <Plus className='w-6 h-6 text-white' />
+              </button>
+            </Dialog.Trigger>
+            <NewOrder />
+          </Dialog.Root>
           </div>
         </div>
       </header>
