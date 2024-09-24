@@ -1,8 +1,10 @@
-import * as Accordion from '@radix-ui/react-accordion';
-import { CalendarBlank, CaretDown, Check, NotePencil, Tag, WhatsappLogo } from '@phosphor-icons/react';
-import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import { useStatus } from '../hooks/useStatus';
 import { useCategoria } from '../hooks/useCategoria';
+import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
+import * as Accordion from '@radix-ui/react-accordion';
+import { CalendarBlank, CaretDown, Check, NotePencil, Tag, WhatsappLogo } from '@phosphor-icons/react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { EditOrder } from './forms/EditOrder';
 
 interface ClienteData {
   cpf: string;
@@ -29,15 +31,13 @@ interface CardProps extends ClienteData, OrdemData {}
 export function CardUserAccordion(props: CardProps) {
   const { statusColor, statusText, statusBgColor } = useStatus(props.fk_status_id);
   const { categoriaText } = useCategoria(props.fk_categoria_id);
- 
-  // Condicional para fechar o acordeão automaticamente se o status for "Concluído" ou "Cancelado"
   const isClosed = statusText === 'Concluído' || statusText === 'Cancelado';
   
   return (
     <Accordion.Root
       className="w-full mb-5"
       type="single"
-      defaultValue={isClosed ? undefined : 'item-1'} // Use undefined em vez de null
+      defaultValue={isClosed ? undefined : 'item-1'}
       collapsible
     >
       <Accordion.Item className={`w-full bg-[#00000062] p-5 rounded-lg border-[2px] ${statusColor} border-solid`} value="item-1">
@@ -88,9 +88,15 @@ export function CardUserAccordion(props: CardProps) {
               </p>
             </div>
 
-            <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-              <NotePencil className='w-6 h-6 text-white' />
-            </button>
+            <Dialog.Root> 
+              <Dialog.Trigger asChild className='cursor-pointer'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                  <NotePencil className='w-6 h-6 text-white' />
+                </button>
+              </Dialog.Trigger>
+              <EditOrder />
+            </Dialog.Root>
+
           </div>
 
         </Accordion.Content>

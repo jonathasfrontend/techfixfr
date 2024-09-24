@@ -28,7 +28,7 @@ interface ClienteData {
 export function AddNew() {
     return (
     <Dialog.Portal>
-        <Dialog.Overlay className="bg-black/40 inset-0 fixed" />
+        <Dialog.Overlay className="bg-black/40 inset-0 fixed backdrop-blur-sm" />
 
         <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[98%] w-[50em] shadow-lg shadow-black/25">
         <Dialog.Title className="text-5xl text-white font-black Inter">Adicionar novo cliente</Dialog.Title>
@@ -108,7 +108,8 @@ export function AddNew() {
                 <button type='submit'
                 className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600"
                 >
-                <Plus size={20} className='mr-1'/>Adicionar
+                    <Plus size={20} className='mr-1'/>
+                    Cadastrar
                 </button>
                 <Dialog.Close type="button" className="bg-zinc-500 px-5 h-10 rounded-md font-semiBold  hover:bg-zinc-600">Cancelar</Dialog.Close>
             </footer>

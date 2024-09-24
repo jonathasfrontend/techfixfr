@@ -60,7 +60,7 @@ export default function Login() {
         </div>
 
         {errorMessage && (
-          <p className="text-red-500 text-sm">{errorMessage}</p>
+          <p className="text-red-500 text-sm mt-2 ">{errorMessage}</p>
         )}
 
         <div>

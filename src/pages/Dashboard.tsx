@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Plus } from '@phosphor-icons/react';
+import { CircleNotch, Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';
@@ -64,34 +64,39 @@ export default function Dashboard() {
             />
           </div>
           <div>
-          <Dialog.Root> 
-            <Dialog.Trigger asChild className='cursor-pointer'>
-              <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-                <Plus className='w-6 h-6 text-white' />
-              </button>
-            </Dialog.Trigger>
-            <AddNew />
-          </Dialog.Root>
+            <Dialog.Root> 
+              <Dialog.Trigger asChild className='cursor-pointer'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                  <Plus className='w-6 h-6 text-white' />
+                </button>
+              </Dialog.Trigger>
+              <AddNew />
+            </Dialog.Root>
           </div>
         </div>
       </header>
 
-      <div className="relative mt-3 w-full overflow-auto grid-cols-4 grid gap-2 px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
-        {orders.map(order => {
-            return (
-              <Card
-                key={order.cliente.cpf}
-                id={order.cliente.cpf} 
-                nome={order.cliente.nome}
-                telefone={order.cliente.telefone}
-                cpf={order.cliente.cpf}
-                fk_status_id={order.fk_status_id}
-                data={order.data}
-              />
-            ) 
-          })}
-        </div>
 
-    </div>
+      <div className="relative mt-3 w-full overflow-auto grid-cols-4 grid gap-2 px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+                <Card
+                  key={order.cliente.cpf}
+                  id={order.cliente.cpf} 
+                  nome={order.cliente.nome}
+                  telefone={order.cliente.telefone}
+                  cpf={order.cliente.cpf}
+                  fk_status_id={order.fk_status_id}
+                  data={order.data}
+                />
+              ))
+            ) : (
+              <div className='w-full h-full flex items-center justify-center'>
+                <CircleNotch className='animate-spin text-green-600' size={32} />
+              </div>
+            )}
+
+        </div>
+      </div>
   );
 }

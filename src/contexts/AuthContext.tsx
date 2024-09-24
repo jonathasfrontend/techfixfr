@@ -30,18 +30,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const { "nextauth.token": token } = parseCookies();
-
-    if (token) {
-      api.get("/admins").then((response) => {
-        const { user } = response.data;
-        setUser(user);
-      })
-    }
-  }, [navigate]);
-
+  
   async function signIn({ email, senha }: SignInData) {
     try {
       const response = await api.post("/authenticate", {
