@@ -1,10 +1,6 @@
-
-
 import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate, useParams } from 'react-router-dom';
-
-
 import { api } from "../services/api";
 import { CaretLeft, CircleNotch, Plus } from '@phosphor-icons/react';
 import { CardUserAccordion } from '../components/CardUserAccordion';

@@ -4,6 +4,7 @@ import { Plus, X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
+import { useNavigate } from 'react-router-dom';
 
 interface Categoria {
     id: number;
@@ -30,12 +31,12 @@ export function AddNew() {
         status: '',
         orcamento: ''
     });
+    const [success, setSuccess] = useState(false);
 
-  // Fetch de categorias e status da API
     useEffect(() => {
         const fetchCategorias = async () => {
             try {
-                const response = await api.get('/categoria'); // Faz a requisição para a rota de categorias
+                const response = await api.get('/categoria');
                 setCategorias(response.data);
             } catch (error) {
                 console.error('Erro ao buscar categorias:', error);
@@ -44,7 +45,7 @@ export function AddNew() {
 
         const fetchStatus = async () => {
             try {
-                const response = await api.get('/status'); // Faz a requisição para a rota de status
+                const response = await api.get('/status');
                 setStatus(response.data);
             } catch (error) {
                 console.error('Erro ao buscar status:', error);
@@ -54,47 +55,76 @@ export function AddNew() {
         fetchCategorias();
         fetchStatus();
     }, []);
-  
-    const handleChange = (e) => {
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-  // Função para enviar o formulário
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Pegamos os IDs de categoria e status usando seus nomes
-      const selectedCategoria = categorias.find((cat) => cat.categoria === formData.categoria);
-      const selectedStatus = status.find((st) => st.status === formData.status);
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            const selectedCategoria = categorias.find((cat) => cat.categoria === formData.categoria);
+            const selectedStatus = status.find((st) => st.status === formData.status);
 
-      const newOrder = {
-        ...formData,
-        fk_categoria_id: selectedCategoria.id,
-        fk_status_id: selectedStatus.id
-      };
+            if (!selectedCategoria || !selectedStatus) {
+                throw new Error('Categoria ou Status inválido');
+            }
 
-      await api.post('/cliente-e-ordem', newOrder); // Envia para a API
-      alert('Cadastro realizado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao cadastrar cliente e ordem:', error);
-      alert('Erro ao cadastrar.');
-    }
-  };
+            const newOrder = {
+                ...formData,
+                fk_categoria_id: selectedCategoria.id,
+                fk_status_id: selectedStatus.id
+            };
+
+            await api.post('/cliente-e-ordem', newOrder);
+            setSuccess(true);
+            setFormData({
+                nome: '',
+                telefone: '',
+                cpf: '',
+                endereco: '',
+                info_produto: '',
+                defeito: '',
+                solucao: '',
+                categoria: '',
+                status: '',
+                orcamento: ''
+            });
+        } catch (error) {
+            console.error('Erro ao cadastrar cliente e ordem:', error);
+            alert('Erro ao cadastrar.');
+        }
+    };
+
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="bg-black/40 inset-0 fixed backdrop-blur-sm" />
       <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[98%] w-[50em] shadow-lg shadow-black/25">
         <Dialog.Title className="text-5xl text-white font-black Inter">Adicionar novo cliente</Dialog.Title>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
-          {/* Nome */}
+
+        {success && (
+          <div className='w-full h-screen bg-black/40 inset-0 fixed backdrop-blur-sm z-50'>
+            <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 p-4 rounded-md shadow-lg '>
+              <h1 className="text-xl font-bold">Cadastro realizado com sucesso!</h1>
+              <p>
+                Vá para a página do cliente{' '}
+                <a href={`/cliente/${formData.cpf}`} className="text-blue-300 underline">
+                  vá a {formData.nome}
+                </a>
+              </p>
+            </div>
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5 relative">
+
+
           <div className="flex flex-col gap-2">
             <label htmlFor="name" className='text-lg font-semibold'>Nome</label>
             <Input name="nome" id="name" required placeholder="Nome do cliente" value={formData.nome} onChange={handleChange} />
           </div>
 
-          {/* Telefone e CPF */}
           <div className="flex items-center gap-2">
             <div className="flex flex-col w-full">
               <label htmlFor="telefone" className='text-lg font-semibold'>Telefone</label>
@@ -106,7 +136,6 @@ export function AddNew() {
             </div>
           </div>
 
-          {/* Endereço */}
           <div className="flex flex-col gap-2">
             <label htmlFor="endereco" className='text-lg font-semibold'>Endereço</label>
             <Input name="endereco" id="endereco" required placeholder="Endereço" value={formData.endereco} onChange={handleChange} />
@@ -127,7 +156,6 @@ export function AddNew() {
             <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={formData.solucao} onChange={handleChange} />
           </div>
 
-          {/* Categoria */}
           <div className="flex flex-col w-full">
             <label htmlFor="category" className='text-lg font-semibold'>Categoria</label>
             <select
@@ -147,7 +175,6 @@ export function AddNew() {
             </select>
           </div>
 
-          {/* Status */}
           <div className="flex flex-col w-full">
             <label htmlFor="status" className='text-lg font-semibold'>Status</label>
             <select
@@ -167,13 +194,11 @@ export function AddNew() {
             </select>
           </div>
 
-          {/* Orçamento */}
           <div className="flex flex-col gap-2">
             <label htmlFor="orcamento" className='text-lg font-semibold'>Orçamento</label>
             <Input name="orcamento" id="orcamento" required placeholder="R$" value={formData.orcamento} onChange={handleChange} />
           </div>
 
-          {/* Botões */}
           <footer className="mt-4 flex items-center justify-end gap-4">
             <button type='submit' className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600">
               <Plus size={20} className='mr-1' />
