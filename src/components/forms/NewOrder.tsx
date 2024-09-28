@@ -30,7 +30,7 @@ export function NewOrder() {
         <Dialog.Portal>
         <Dialog.Overlay className="bg-black/40 inset-0 fixed backdrop-blur-sm" />
 
-        <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg w-[50em] shadow-lg shadow-black/25">
+        <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg w-[50em] h-[90%] shadow-lg shadow-black/25">
         <Dialog.Title className="text-5xl text-white font-black inter">Nova Ordem</Dialog.Title>
         <form  className="flex flex-col gap-4 h-auto mt-5">
 

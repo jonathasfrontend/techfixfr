@@ -66,12 +66,12 @@ export function EditOrder () {
 
             <div className="flex items-center gap-2">
                 <div className="flex flex-col w-full">
-                    <label htmlFor="status" className='text-lg font-semibold'>Status</label>
+                    <label htmlFor="status" className='text-lg font-semibold mb-2'>Status</label>
                     <select
                         name="status"
                         id="status"
                         required
-                        className="bg-[#00140D] text-base py-4 px-5 rounded-lg outline-none placeholder:text-[#71717A] appearance-none"
+                        className="bg-[#00140D] text-lg py-4 px-5 rounded-lg outline-none placeholder:text-[#71717A] appearance-none"
                         defaultValue=""
                         >
                             <option disabled value="">Selecione o status do dispositivo</option>

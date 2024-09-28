@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from './pages/Login';  // Exemplo de página de login
-import Dashboard from './pages/Dashboard';  // Exemplo de página de dashboard
+import LoginPage from './pages/Login';
+import Dashboard from './pages/Dashboard';
 import { AuthProvider } from "./contexts/AuthContext";
 import User from "./pages/User";
 
