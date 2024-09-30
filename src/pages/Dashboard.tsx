@@ -81,8 +81,8 @@ export default function Dashboard() {
           {orders.length > 0 ? (
             orders.map((order) => (
                 <Card
-                  key={order.cliente.cpf}
-                  id={order.cliente.cpf} 
+                  key={order.id}
+                  id={order.id} 
                   nome={order.cliente.nome}
                   telefone={order.cliente.telefone}
                   cpf={order.cliente.cpf}

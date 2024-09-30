@@ -22,7 +22,7 @@ export function Card(props: CardProps ) {
     <div className={`w-full h-full relative rounded-md border-solid border-[1px] text-white bg-[#121214a3] ${statusColor} px-5 py-2 overflow-hidden`}>
 
       <div className='w-full flex items-center justify-between'>
-        <a href={`/cliente/${props.cpf}`}>
+        <a href={`/produto/${props.id}`}>
             <h1 className='flex items-center text-xl font-medium'><User size={20} className='mr-2' />{props.nome}</h1>
         </a>
       </div>

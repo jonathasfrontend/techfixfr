@@ -54,10 +54,16 @@ export function CardUserAccordion(props: CardProps) {
 
         <Accordion.Content className='mt-5'>
           <p className='text-sm font-medium mt-2 text-white'>CPF: <span className='ml-2 text-neutral-500'>{formatCpf(props.cpf)}</span></p>
-          <a href={`https://api.whatsapp.com/send?phone=${props.telefone}`} className='flex mt-2 items-center text-sm font-medium text-neutral-500'>
-            <WhatsappLogo size={20} className='mr-2 text-white' />
-            {formatTelefone(props.telefone)}
-          </a>              
+
+          <div className='flex items-center'>
+            <a href={`https://api.whatsapp.com/send?phone=${props.telefone}`} 
+              className='block w-10 h-10 bg-gradient-to-t from-[#128c7e] to-[#25d366] p-1 rounded-md'
+            >
+              <WhatsappLogo className='text-white block m-auto h-full w-full' />
+            </a>
+            <p className='flex ml-2 items-center text-sm font-medium text-neutral-500'>{formatTelefone(props.telefone)}</p>
+          </div>
+
           <p className='text-sm font-medium mt-2 text-white'>Endereço: <span className='mr-2 text-neutral-500'>{props.endereco}</span></p>
 
           <div className='w-full bg-[#00000052] rounded-lg my-3 p-3'>

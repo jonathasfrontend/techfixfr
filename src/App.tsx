@@ -11,7 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/cliente/:cpf" element={<User />} />
+          <Route path="/produto/:id" element={<User />} />
         </Routes>
       </AuthProvider>
     </Router>

@@ -30,7 +30,7 @@ interface OrdemData {
 
 
 export default function User() {
-  const { cpf } = useParams();
+  const { id } = useParams();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -38,22 +38,32 @@ export default function User() {
     if (!token) {
       navigate('/');
     } else {
-      navigate(`/cliente/${cpf}`);
-    }
-  }, [navigate, ]);
-
-  const [cliente, setCliente] = useState<ClienteData | null>(null);
-  const [ordens, setOrdens] = useState<OrdemData[]>([]);
-
-  useEffect(() => {
-    api.get(`/cliente/${cpf}`).then(response => {
-        setCliente(response.data.cliente)
-        setOrdens(response.data.ordens);
+      api.get(`/produto/${id}`)
+        .then(response => {
+        setCliente(response.data.cliente);
+        setOrdem(response.data.ordem);
+        console.log(response.data);
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);
       });
-  }, [cpf]);
+    }
+  }, [id, navigate]);
+
+
+  const [cliente, setCliente] = useState<ClienteData | null>(null);
+  const [ordem, setOrdem] = useState<OrdemData | null>(null);
+
+  useEffect(() => {
+    api.get(`/produto/${id}`).then(response => {
+        setCliente(response.data.cliente)
+        setOrdem(response.data.ordem);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching cliente details:", error);
+      });
+  }, [id]);
 
   return (
     <div className='min-h-screen bg'>
@@ -92,34 +102,32 @@ export default function User() {
       </header>
 
       <div className="relative mt-3 w-full overflow-auto px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
-      {cliente && ordens.length > 0 ? (
-          ordens.map((ordem) => (
-            <CardUserAccordion
-              key={ordem.id}
-              cpf={cliente.cpf}
-              nome={cliente.nome}
-              endereco={cliente.endereco}
-              telefone={cliente.telefone}
-              id={ordem.id}
-              data={ordem.data}
-              info_produto={ordem.info_produto}
-              defeito={ordem.defeito}
-              solucao={ordem.solucao}
-              garantia={ordem.garantia}
-              fk_cliente_cpf={ordem.fk_cliente_cpf}
-              fk_status_id={ordem.fk_status_id}
-              fk_categoria_id={ordem.fk_categoria_id}
-              orcamento={ordem.orcamento}
-            />
-          ))
+
+      {cliente && ordem ? (
+        <CardUserAccordion
+          key={ordem.id}
+          cpf={cliente.cpf}
+          nome={cliente.nome}
+          endereco={cliente.endereco}
+          telefone={cliente.telefone}
+          id={ordem.id}
+          data={ordem.data}
+          info_produto={ordem.info_produto}
+          defeito={ordem.defeito}
+          solucao={ordem.solucao}
+          garantia={ordem.garantia}
+          fk_cliente_cpf={ordem.fk_cliente_cpf}
+          fk_status_id={ordem.fk_status_id}
+          fk_categoria_id={ordem.fk_categoria_id}
+          orcamento={ordem.orcamento}
+        />
         ) : (
           <div className='w-full flex items-center justify-center'>
             <CircleNotch className='animate-spin text-green-600' size={32} />
           </div>
-        )}
+      )}
 
       </div>
-
     </div>
   );
 }
