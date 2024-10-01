@@ -28,39 +28,30 @@ interface OrdemData {
   orcamento: string;
 }
 
-
 export default function User() {
-  const { id } = useParams();
-
+  const { cpf } = useParams();
   const navigate = useNavigate();
+
+  const [cliente, setCliente] = useState<ClienteData | null>(null);
+  const [ordens, setOrdens] = useState<OrdemData[]>([]);
+
+  
   useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
     if (!token) {
       navigate('/');
     } else {
-      api.get(`/produto/${id}`).then(response => {
+      api.get(`/produto/${cpf}`).then(response => {
         setCliente(response.data.cliente);
-        setOrdem(response.data.ordem);
+        const reversedOrders = [...response.data.ordens].reverse();
+        setOrdens(reversedOrders);
+
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);
       });
     }
-  }, [id, navigate]);
-
-
-  const [cliente, setCliente] = useState<ClienteData | null>(null);
-  const [ordem, setOrdem] = useState<OrdemData | null>(null);
-
-  useEffect(() => {
-    api.get(`/produto/${id}`).then(response => {
-        setCliente(response.data.cliente)
-        setOrdem(response.data.ordem);
-      })
-      .catch(error => {
-        console.error("Error fetching cliente details:", error);
-      });
-  }, [id]);
+  }, [cpf, navigate]);
 
   return (
     <div className='min-h-screen bg'>
@@ -100,8 +91,8 @@ export default function User() {
 
       <div className="relative mt-3 w-full overflow-auto px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
 
-        {cliente && ordem.length > 0 ? (
-          ordem.map((ordem) => (
+        {cliente && ordens.length > 0 ? (
+          ordens.map((ordem) => (
             <CardUserAccordion
               key={ordem.id}
               cpf={cliente.cpf}

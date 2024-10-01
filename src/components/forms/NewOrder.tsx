@@ -31,8 +31,7 @@ export function NewOrder() {
         orcamento: ''
     });
 
-    // Pegando o ID da URL
-    const { id } = useParams();
+    const { cpf } = useParams();
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -52,12 +51,11 @@ export function NewOrder() {
                 console.error('Erro ao buscar status:', error);
             }
         };
-
-        // Buscando o CPF do cliente com base no ID do produto
+        
         const fetchCpfCliente = async () => {
             try {
-                const response = await api.get(`/produto/${id}`);
-                setCpfCliente(response.data.cliente.cpf); // Assumindo que o CPF está no response
+                const response = await api.get(`/produto/${cpf}`);
+                setCpfCliente(response.data.cliente.cpf);
             } catch (error) {
                 console.error('Erro ao buscar CPF do cliente:', error);
             }
@@ -65,8 +63,8 @@ export function NewOrder() {
 
         fetchCategorias();
         fetchStatus();
-        fetchCpfCliente(); // Buscando o CPF quando o componente é montado
-    }, [id]);
+        fetchCpfCliente();
+    }, [cpf]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
