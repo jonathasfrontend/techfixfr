@@ -38,11 +38,9 @@ export default function User() {
     if (!token) {
       navigate('/');
     } else {
-      api.get(`/produto/${id}`)
-        .then(response => {
+      api.get(`/produto/${id}`).then(response => {
         setCliente(response.data.cliente);
         setOrdem(response.data.ordem);
-        console.log(response.data);
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);
@@ -58,7 +56,6 @@ export default function User() {
     api.get(`/produto/${id}`).then(response => {
         setCliente(response.data.cliente)
         setOrdem(response.data.ordem);
-        console.log(response.data);
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);
@@ -103,33 +100,33 @@ export default function User() {
 
       <div className="relative mt-3 w-full overflow-auto px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
 
-      {cliente && ordem ? (
-        <CardUserAccordion
-          key={ordem.id}
-          cpf={cliente.cpf}
-          nome={cliente.nome}
-          endereco={cliente.endereco}
-          telefone={cliente.telefone}
-          id={ordem.id}
-          data={ordem.data}
-          info_produto={ordem.info_produto}
-          defeito={ordem.defeito}
-          solucao={ordem.solucao}
-          garantia={ordem.garantia}
-          fk_cliente_cpf={ordem.fk_cliente_cpf}
-          fk_status_id={ordem.fk_status_id}
-          fk_categoria_id={ordem.fk_categoria_id}
-          orcamento={ordem.orcamento}
-        />
+        {cliente && ordem.length > 0 ? (
+          ordem.map((ordem) => (
+            <CardUserAccordion
+              key={ordem.id}
+              cpf={cliente.cpf}
+              nome={cliente.nome}
+              endereco={cliente.endereco}
+              telefone={cliente.telefone}
+              id={ordem.id}
+              data={ordem.data}
+              info_produto={ordem.info_produto}
+              defeito={ordem.defeito}
+              solucao={ordem.solucao}
+              garantia={ordem.garantia}
+              fk_cliente_cpf={ordem.fk_cliente_cpf}
+              fk_status_id={ordem.fk_status_id}
+              fk_categoria_id={ordem.fk_categoria_id}
+              orcamento={ordem.orcamento}
+            />
+          ))
         ) : (
           <div className='w-full flex items-center justify-center'>
             <CircleNotch className='animate-spin text-green-600' size={32} />
           </div>
-      )}
+        )}
 
       </div>
     </div>
   );
 }
-
-
