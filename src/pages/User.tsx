@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from "../services/api";
-import { CaretLeft, CircleNotch, Plus } from '@phosphor-icons/react';
+import { CaretLeft, CircleNotch, NotePencil, Plus } from '@phosphor-icons/react';
 import { CardUserAccordion } from '../components/CardUserAccordion';
 import { IconUser } from '../components/IconUser';
 import * as Dialog from '@radix-ui/react-dialog';
 import { NewOrder } from '../components/forms/NewOrder';
+import { EditOrder } from '../components/forms/EditOrder';
 
 interface ClienteData {
   cpf: string;
@@ -76,15 +77,24 @@ export default function User() {
               placeholder="Pesquise..."
             />
           </div>
-          <div>
-          <Dialog.Root> 
-            <Dialog.Trigger asChild className='cursor-pointer'>
-              <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-                <Plus className='w-6 h-6 text-white' />
-              </button>
-            </Dialog.Trigger>
-            <NewOrder />
-          </Dialog.Root>
+          <div className='flex'>
+            <Dialog.Root> 
+              <Dialog.Trigger asChild className='cursor-pointer'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                  <Plus className='w-6 h-6 text-white' />
+                </button>
+              </Dialog.Trigger>
+              <NewOrder />
+            </Dialog.Root>
+
+            <Dialog.Root> 
+              <Dialog.Trigger asChild className='cursor-pointer'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                  <NotePencil className='w-6 h-6 text-white' />
+                </button>
+              </Dialog.Trigger>
+              <EditOrder />
+            </Dialog.Root>
           </div>
         </div>
       </header>

@@ -2,9 +2,7 @@ import { useStatus } from '../hooks/useStatus';
 import { useCategoria } from '../hooks/useCategoria';
 import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
-import { CalendarBlank, CaretDown, Check, NotePencil, Tag, WhatsappLogo } from '@phosphor-icons/react';
-import * as Dialog from '@radix-ui/react-dialog';
-import { EditOrder } from './forms/EditOrder';
+import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo } from '@phosphor-icons/react';
 
 interface ClienteData {
   cpf: string;
@@ -94,14 +92,7 @@ export function CardUserAccordion(props: CardProps) {
               </p>
             </div>
 
-            <Dialog.Root> 
-              <Dialog.Trigger asChild className='cursor-pointer'>
-                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
-                  <NotePencil className='w-6 h-6 text-white' />
-                </button>
-              </Dialog.Trigger>
-              <EditOrder />
-            </Dialog.Root>
+            
 
           </div>
 

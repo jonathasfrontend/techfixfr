@@ -18,19 +18,23 @@ interface Status {
     status: string;
 }
 
+interface Ordem {
+    id: string;
+    info_produto: string;
+    defeito: string;
+    solucao: string;
+    categoria: string;
+    status: string;
+    orcamento: string;
+}
+
 export function EditOrder() {
     const { cpf } = useParams();
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [status, setStatus] = useState<Status[]>([]);
-    const [ordemGetId, setOrdemGetId] = useState<Status[]>([]);
-    const [formData, setFormData] = useState({
-        info_produto: '',
-        defeito: '',
-        solucao: '',
-        categoria: '',
-        status: '',
-        orcamento: ''
-    });
+    const [statusList, setStatus] = useState<Status[]>([]);
+    const [ordens, setOrdens] = useState<Ordem[]>([]);
+
+    const [selectedOrdem, setSelectedOrdem] = useState<Ordem | null>(null); // Ordem selecionada para edição
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -50,49 +54,26 @@ export function EditOrder() {
                 console.error('Erro ao buscar status:', error);
             }
         };
-    
-        const fetchOrder = async () => {
+
+        const fetchOrdens = async () => {
             try {
                 const response = await api.get(`/produto/${cpf}`);
-                console.log('Resposta de produto:', response.data);
-                const ordemId = response.data.ordens.id;
-                setOrdemGetId(ordemId);
-                fetchOrderDetails(ordemId);
+                setOrdens(response.data.ordens);
             } catch (error) {
-                console.error('Erro ao buscar ordem:', error);
-            }
-        };     
-    
-        const fetchOrderDetails = async (ordemId: number) => {
-            if (!ordemId) {
-                console.error('ordemId é indefinido!');
-                return; // Adicione uma verificação para evitar chamadas de API com ordemId indefinido
-            }
-            try {
-                const response = await api.get(`/cliente/${cpf}/ordem/${ordemId}`);
-                setFormData({
-                    info_produto: response.data.ordem.info_produto,
-                    defeito: response.data.ordem.defeito,
-                    solucao: response.data.ordem.solucao,
-                    categoria: response.data.ordem.categoria,
-                    status: response.data.ordem.status,
-                    orcamento: response.data.ordem.orcamento
-                });
-            } catch (error) {
-                console.error('Erro ao buscar detalhes da ordem:', error);
+                console.error('Erro ao buscar ordens:', error);
             }
         };
-        
     
         fetchCategorias();
         fetchStatus();
-        fetchOrder(); // Chame fetchOrder primeiro
+        fetchOrdens();
     }, [cpf]);
-    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (selectedOrdem) {
+            const { name, value } = e.target;
+            setSelectedOrdem((prev) => prev ? { ...prev, [name]: value } : null);
+        }
     };
 
     function notify() {
@@ -101,10 +82,15 @@ export function EditOrder() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            const selectedCategoria = categorias.find((cat) => cat.categoria === formData.categoria);
-            const selectedStatus = status.find((st) => st.status === formData.status);
 
+        if (!selectedOrdem) return;
+
+        const { id, categoria, status, ...formData } = selectedOrdem;
+
+        try {
+            const selectedCategoria = categorias.find((cat) => cat.categoria === categoria);
+            const selectedStatus = statusList.find((st) => st.status === status); // Alteração aqui
+   
             if (!selectedCategoria || !selectedStatus) {
                 throw new Error('Categoria ou Status inválido');
             }
@@ -112,16 +98,19 @@ export function EditOrder() {
             const updatedOrder = {
                 ...formData,
                 fk_categoria_id: selectedCategoria.id,
-                fk_status_id: selectedStatus.id
+                fk_status_id: selectedStatus.id,
             };
 
-            await api.put(`/cliente/${cpf}/ordem/${ordemGetId}`, updatedOrder);
+            await api.put(`/cliente/${cpf}/ordem/${id}`, updatedOrder);
             notify();
-
         } catch (error) {
             console.error('Erro ao atualizar a ordem:', error);
             alert('Erro ao atualizar a ordem.');
         }
+    };
+
+    const handleEdit = (ordem: Ordem) => {
+        setSelectedOrdem(ordem);  // Seleciona a ordem para edição
     };
 
     return (
@@ -143,85 +132,93 @@ export function EditOrder() {
 
             <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg w-[50em] h-[90%] shadow-lg shadow-black/25">
                 <Dialog.Title className="text-5xl text-white font-black inter">Editar Ordem</Dialog.Title>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
 
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="info_produto" className='text-lg font-semibold'>Informações do produto</label>
-                        <Input name="info_produto" id="info_produto" required placeholder="Informações do produto" value={formData.info_produto} onChange={handleChange} />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="defeito" className='text-lg font-semibold'>Relato do cliente</label>
-                        <Textarea name="defeito" id="defeito" required placeholder="Relato do cliente" value={formData.defeito} onChange={handleChange} />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="solucao" className='text-lg font-semibold'>Diagnóstico e serviço a ser prestado</label>
-                        <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={formData.solucao} onChange={handleChange} />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="categoria" className='text-lg font-semibold'>Categoria</label>
-                            <select
-                                name="categoria"
-                                id="categoria"
-                                required
-                                className="bg-[#00140D] text-lg py-4 px-5 rounded-lg outline-none"
-                                value={formData.categoria}
-                                onChange={handleChange}
-                            >
-                                <option disabled value="">Selecione a categoria do dispositivo</option>
-                                {categorias.map((categoria) => (
-                                    <option key={categoria.id} value={categoria.categoria}>
-                                        {categoria.categoria}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="status" className='text-lg font-semibold'>Status</label>
-                            <select
-                                name="status"
-                                id="status"
-                                required
-                                className="bg-[#00140D] text-lg py-4 px-5 rounded-lg outline-none"
-                                value={formData.status}
-                                onChange={handleChange}
-                            >
-                                <option disabled value="">Selecione o status do dispositivo</option>
-                                {status.map((st) => (
-                                    <option key={st.id} value={st.status}>
-                                        {st.status}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="orcamento" className='text-lg font-semibold'>Orçamento</label>
-                        <Input name="orcamento" id="orcamento" required placeholder="R$" value={formData.orcamento} onChange={handleChange} />
-                    </div>
-
-                    <footer className="mt-4 flex items-center justify-end gap-4">
-                        <button type='submit'
-                            className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600"
-                        >
-                            <Plus size={20} className='mr-1' />
-                            Atualizar
+                <div className="w-full flex mt-5">
+                    {ordens.map((ordem) => (
+                        <button onClick={() => handleEdit(ordem) } key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm'>
+                            {ordem.info_produto}
                         </button>
-                        <Dialog.Close type="button" className="bg-zinc-500 px-5 h-10 rounded-md font-semiBold  hover:bg-zinc-600">Cancelar</Dialog.Close>
-                    </footer>
+                    ))}
+                </div>
 
-                </form>
+                {selectedOrdem && (
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="info_produto" className='text-lg font-semibold'>Informações do produto</label>
+                            <Input name="info_produto" id="info_produto" required placeholder="Informações do produto" value={selectedOrdem.info_produto} onChange={handleChange} />
+                        </div>
 
-                <Dialog.Close asChild>
-                    <button className="rounded-full h-7 w-7 inline-flex items-center justify-center absolute top-8 right-8" aria-label="Close">
-                        <X size={32} />
-                    </button>
-                </Dialog.Close>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="defeito" className='text-lg font-semibold'>Relato do cliente</label>
+                            <Textarea name="defeito" id="defeito" required placeholder="Relato do cliente" value={selectedOrdem.defeito} onChange={handleChange} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="solucao" className='text-lg font-semibold'>Diagnóstico e serviço a ser prestado</label>
+                            <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={selectedOrdem.solucao} onChange={handleChange} />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <div className="flex flex-col w-full">
+                                <label htmlFor="categoria" className='text-lg font-semibold'>Categoria</label>
+                                <select
+                                    name="categoria"
+                                    id="categoria"
+                                    required
+                                    className="bg-[#00140D] text-lg py-4 px-5 rounded-lg outline-none"
+                                    value={selectedOrdem.categoria}
+                                    onChange={handleChange}
+                                >
+                                    <option disabled value="">Selecione a categoria do dispositivo</option>
+                                    {categorias.map((categoria) => (
+                                        <option key={categoria.id} value={categoria.categoria}>
+                                            {categoria.categoria}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex flex-col w-full">
+                                <label htmlFor="status" className='text-lg font-semibold'>Status</label>
+                                <select
+                                    name="status"
+                                    id="status"
+                                    required
+                                    className="bg-[#00140D] text-lg py-4 px-5 rounded-lg outline-none"
+                                    value={selectedOrdem.status}
+                                    onChange={handleChange}
+                                >
+                                    <option disabled value="">Selecione o status do dispositivo</option>
+                                    {statusList.map((st) => (
+                                        <option key={st.id} value={st.status}>
+                                            {st.status}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="orcamento" className='text-lg font-semibold'>Orçamento</label>
+                            <Input name="orcamento" id="orcamento" required placeholder="R$" value={selectedOrdem.orcamento} onChange={handleChange} />
+                        </div>
+
+                        <footer className="mt-4 flex items-center justify-end gap-4">
+                            <button type='submit'
+                                className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600"
+                            >
+                                <Plus size={20} className='mr-1' />
+                                Atualizar
+                            </button>
+                            <Dialog.Close asChild>
+                                <button className="bg-red-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-red-600">
+                                    <X size={20} />
+                                    Fechar
+                                </button>
+                            </Dialog.Close>
+                        </footer>
+                    </form>
+                )}
             </Dialog.Content>
         </Dialog.Portal>
     );
