@@ -33,8 +33,7 @@ export function EditOrder() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [statusList, setStatus] = useState<Status[]>([]);
     const [ordens, setOrdens] = useState<Ordem[]>([]);
-
-    const [selectedOrdem, setSelectedOrdem] = useState<Ordem | null>(null); // Ordem selecionada para edição
+    const [selectedOrdem, setSelectedOrdem] = useState<Ordem | null>(null);
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -76,12 +75,17 @@ export function EditOrder() {
         }
     };
 
-    function notify() {
+    function notifySuccess() {
         toast.success('Ordem atualizada com sucesso!');
+    }
+    
+    function notifyError() {
+        toast.error('Erro ao atualizar ordem!');
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        
 
         if (!selectedOrdem) return;
 
@@ -89,7 +93,7 @@ export function EditOrder() {
 
         try {
             const selectedCategoria = categorias.find((cat) => cat.categoria === categoria);
-            const selectedStatus = statusList.find((st) => st.status === status); // Alteração aqui
+            const selectedStatus = statusList.find((st) => st.status === status);
    
             if (!selectedCategoria || !selectedStatus) {
                 throw new Error('Categoria ou Status inválido');
@@ -100,17 +104,20 @@ export function EditOrder() {
                 fk_categoria_id: selectedCategoria.id,
                 fk_status_id: selectedStatus.id,
             };
-
+            
+            // Atualiza a ordem usando o ID da ordem selecionada
             await api.put(`/cliente/${cpf}/ordem/${id}`, updatedOrder);
-            notify();
+            console.log('Ordem atualizada:', updatedOrder, `/cliente/${cpf}/ordem/${id}`);
+
+            notifySuccess();
         } catch (error) {
             console.error('Erro ao atualizar a ordem:', error);
-            alert('Erro ao atualizar a ordem.');
+            notifyError();
         }
     };
 
     const handleEdit = (ordem: Ordem) => {
-        setSelectedOrdem(ordem);  // Seleciona a ordem para edição
+        setSelectedOrdem(ordem); // Define a ordem selecionada
     };
 
     return (
@@ -135,7 +142,7 @@ export function EditOrder() {
 
                 <div className="w-full flex mt-5">
                     {ordens.map((ordem) => (
-                        <button onClick={() => handleEdit(ordem) } key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm'>
+                        <button onClick={() => handleEdit(ordem)} key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm'>
                             {ordem.info_produto}
                         </button>
                     ))}
@@ -212,7 +219,7 @@ export function EditOrder() {
                             </button>
                             <Dialog.Close asChild>
                                 <button className="bg-red-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-red-600">
-                                    <X size={20} />
+                                    <X size={20} className='mr-1' />
                                     Fechar
                                 </button>
                             </Dialog.Close>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CircleNotch, Plus } from '@phosphor-icons/react';
+import { CircleNotch, MagnifyingGlass, Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';
@@ -53,16 +53,19 @@ export default function Dashboard() {
         </div>
 
         <div className='flex items-center justify-between'>
-          <div className='w-[280px]'>
+          <form className='w-[330px] h-[38px] bg-[#ffffff3c] rounded-full overflow-hidden flex items-center border-[1px] border-solid border-white'>
             <input 
-            className='w-full h-[35px] bg-[#ffffff3c] rounded-full border-[1px] border-solid border-white outline-none px-3 font-medium text-sm placeholder:text-white text-white'
+            className='w-full h-full bg-[#ffffff00] rounded-full outline-none px-3 font-medium text-sm placeholder:text-white text-white'
             type="search"
             id="search"
             name="search"
             autoComplete="off"
             placeholder="Pesquise..."
             />
-          </div>
+          <button className='w-14 h-full bg-[#ffffff3c] flex items-center justify-center hover:bg-[#ffffff75]'>
+            <MagnifyingGlass className=' w-5 h-full text-white' />
+          </button>
+          </form>
           <div>
             <Dialog.Root> 
               <Dialog.Trigger asChild className='cursor-pointer'>

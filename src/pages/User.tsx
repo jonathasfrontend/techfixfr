@@ -67,20 +67,10 @@ export default function User() {
         </div>
 
         <div className='flex items-center justify-between'>
-          <div className='w-[280px]'>
-            <input 
-              className='w-full h-[35px] bg-[#ffffff3c] rounded-full border-[1px] border-solid border-white outline-none px-3 font-medium text-sm placeholder:text-white text-white'
-              type="search"
-              id="search"
-              name="search"
-              autoComplete="off"
-              placeholder="Pesquise..."
-            />
-          </div>
           <div className='flex'>
             <Dialog.Root> 
               <Dialog.Trigger asChild className='cursor-pointer'>
-                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg mx-2 hover:bg-[#2eb600d8]'>
                   <Plus className='w-6 h-6 text-white' />
                 </button>
               </Dialog.Trigger>
@@ -89,7 +79,7 @@ export default function User() {
 
             <Dialog.Root> 
               <Dialog.Trigger asChild className='cursor-pointer'>
-                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg hover:bg-[#2eb600d8]'>
                   <NotePencil className='w-6 h-6 text-white' />
                 </button>
               </Dialog.Trigger>

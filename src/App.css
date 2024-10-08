@@ -30,3 +30,21 @@
 .AccordionTrigger[aria-expanded="true"] .accordion-icon {
     transform: rotate(180deg);
 }
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #404040 inset !important;
+    -webkit-text-fill-color: white !important;
+} 
+
+input:-moz-autofill {
+    background-color: #404040 !important;
+    color: white !important;
+    border: 1px solid #2FB600 !important;
+}
+
+input:-ms-autofill {
+    background-color: #404040 !important;
+    color: white !important;
+    border: 1px solid #2FB600 !important;
+}
+  
