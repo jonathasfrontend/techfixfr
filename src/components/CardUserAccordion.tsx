@@ -55,7 +55,7 @@ export function CardUserAccordion(props: CardProps) {
 
           <div className='flex items-center'>
             <a href={`https://api.whatsapp.com/send?phone=${props.telefone}`} 
-              className='block w-10 h-10 bg-gradient-to-t from-[#128c7e] to-[#25d366] p-1 rounded-md'
+              className='block w-10 h-10 bg-gradient-to-t from-[#128c7e] to-[#25d366] p-1 rounded-md outline-none'
             >
               <WhatsappLogo className='text-white block m-auto h-full w-full' />
             </a>

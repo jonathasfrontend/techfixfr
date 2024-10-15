@@ -69,7 +69,7 @@ export default function Dashboard() {
           <div>
             <Dialog.Root> 
               <Dialog.Trigger asChild className='cursor-pointer'>
-                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8]'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8] outline-none'>
                   <Plus className='w-6 h-6 text-white' />
                 </button>
               </Dialog.Trigger>

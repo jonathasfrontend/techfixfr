@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
-import { CircleNotch, Eye, EyeSlash } from '@phosphor-icons/react'; // Importando os ícones de olho
+import { CircleNotch, Eye, EyeSlash } from '@phosphor-icons/react';
 
 type SignInData = {
   email: string;

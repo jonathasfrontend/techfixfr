@@ -105,7 +105,6 @@ export function EditOrder() {
                 fk_status_id: selectedStatus.id,
             };
             
-            // Atualiza a ordem usando o ID da ordem selecionada
             await api.put(`/cliente/${cpf}/ordem/${id}`, updatedOrder);
             console.log('Ordem atualizada:', updatedOrder, `/cliente/${cpf}/ordem/${id}`);
 
@@ -117,7 +116,7 @@ export function EditOrder() {
     };
 
     const handleEdit = (ordem: Ordem) => {
-        setSelectedOrdem(ordem); // Define a ordem selecionada
+        setSelectedOrdem(ordem);
     };
 
     return (
@@ -142,7 +141,7 @@ export function EditOrder() {
 
                 <div className="w-full flex mt-5">
                     {ordens.map((ordem) => (
-                        <button onClick={() => handleEdit(ordem)} key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm'>
+                        <button onClick={() => handleEdit(ordem)} key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm outline-none'>
                             {ordem.info_produto}
                         </button>
                     ))}
@@ -212,13 +211,13 @@ export function EditOrder() {
 
                         <footer className="mt-4 flex items-center justify-end gap-4">
                             <button type='submit'
-                                className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600"
+                                className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600 outline-none"
                             >
                                 <Plus size={20} className='mr-1' />
                                 Atualizar
                             </button>
                             <Dialog.Close asChild>
-                                <button className="bg-red-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-red-600">
+                                <button className="bg-red-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-red-600 outline-none">
                                     <X size={20} className='mr-1' />
                                     Fechar
                                 </button>

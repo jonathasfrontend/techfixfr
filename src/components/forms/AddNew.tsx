@@ -205,7 +205,7 @@ export function AddNew() {
             </div>
 
             <footer className="mt-4 flex items-center justify-end gap-4">
-              <button type='submit' className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600">
+              <button type='submit' className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600 outline-none">
                 <Plus size={20} className='mr-1' />
                 Cadastrar
               </button>
@@ -213,7 +213,7 @@ export function AddNew() {
             </footer>
           </form>
           <Dialog.Close asChild>
-              <button className="rounded-full h-7 w-7 inline-flex items-center justify-center absolute top-8 right-8" aria-label="Close">
+              <button className="rounded-full h-7 w-7 inline-flex items-center justify-center absolute top-8 right-8 outline-none" aria-label="Close">
                   <X size={32} />
               </button>
           </Dialog.Close>
