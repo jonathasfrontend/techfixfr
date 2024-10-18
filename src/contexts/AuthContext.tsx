@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { setCookie, parseCookies } from "nookies";
+import { setCookie } from "nookies";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 
@@ -17,7 +17,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   user: User | null;
   signIn: (data: SignInData) => Promise<void>;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; // Adicionar setUser aqui
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 type AuthProviderProps = {
