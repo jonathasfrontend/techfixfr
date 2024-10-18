@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, ReactNode } from "react";
 import { setCookie } from "nookies";
 import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
