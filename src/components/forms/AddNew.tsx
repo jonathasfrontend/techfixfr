@@ -1,4 +1,4 @@
-import { Plus, X } from '@phosphor-icons/react';
+import { Plus } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
@@ -119,59 +119,59 @@ export function AddNew() {
         theme="light"
         transition={Bounce}
       />
-      <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[98%] w-[50em] shadow-lg shadow-black/25">
-        <Dialog.Title className="text-5xl text-white font-black Inter">Adicionar novo cliente</Dialog.Title>
+      <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[90%] w-[480px] shadow-lg shadow-black/25">
+        <Dialog.Title className="text-3xl text-white font-black Inter">Adicionar novo cliente</Dialog.Title>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
 
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className='text-lg font-semibold'>Nome</label>
+              <label htmlFor="name" >Nome</label>
               <Input name="nome" id="name" required placeholder="Nome do cliente" value={formData.nome} onChange={handleChange} />
             </div>
 
             <div className="flex items-center gap-2">
               <div className="flex flex-col w-full">
-                <label htmlFor="telefone" className='text-lg font-semibold'>Telefone</label>
-                <Input name="telefone" id="telefone" required placeholder="(42) 99999-9999" value={formData.telefone} onChange={handleChange} />
+                <label htmlFor="telefone" >Telefone</label>
+                <Input name="telefone" id="telefone" className='w-1/2' required placeholder="(42) 99999-9999" value={formData.telefone} onChange={handleChange} />
               </div>
               <div className="flex flex-col w-full">
-                <label htmlFor="cpf" className='text-lg font-semibold'>CPF</label>
-                <Input name="cpf" id="cpf" required placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
+                <label htmlFor="cpf" >CPF</label>
+                <Input name="cpf" id="cpf" className='w-1/2' required placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="endereco" className='text-lg font-semibold'>Endereço</label>
+              <label htmlFor="endereco" >Endereço</label>
               <Input name="endereco" id="endereco" required placeholder="Endereço" value={formData.endereco} onChange={handleChange} />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="info_produto" className='text-lg font-semibold'>Informações do produto</label>
+              <label htmlFor="info_produto" >Informações do produto</label>
               <Input name="info_produto" id="info_produto" required placeholder="Informações do produto" value={formData.info_produto} onChange={handleChange} />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="defeito" className='text-lg font-semibold'>Relato do cliente</label>
+              <label htmlFor="defeito" >Relato do cliente</label>
               <Textarea name="defeito" id="defeito" required placeholder="Relato do cliente" value={formData.defeito} onChange={handleChange}/>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="solucao" className='text-lg font-semibold'>Diagnóstico e serviço a ser prestado</label>
+              <label htmlFor="solucao" >Diagnóstico e serviço a ser prestado</label>
               <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={formData.solucao} onChange={handleChange} />
             </div>
 
             <div className="flex flex-col w-full">
-              <label htmlFor="category" className='text-lg font-semibold'>Categoria</label>
+              <label htmlFor="category" >Categoria</label>
               <select
                 name="categoria"
                 id="category"
                 required
-                className="bg-[#00140D] text-base py-4 px-5 rounded-lg outline-none"
+                className="bg-[#00140D] text-sm py-4 pl-5 rounded-lg outline-none"
                 value={formData.categoria}
                 onChange={handleChange}
               >
-                <option disabled value="">Selecione a categoria do dispositivo</option>
+                <option disabled value="">Selecione a categoria</option>
                 {categorias.map((categoria) => (
                   <option key={categoria.id} value={categoria.categoria}>
                     {categoria.categoria}
@@ -181,16 +181,16 @@ export function AddNew() {
             </div>
 
             <div className="flex flex-col w-full">
-              <label htmlFor="status" className='text-lg font-semibold'>Status</label>
+              <label htmlFor="status" >Status</label>
               <select
                 name="status"
                 id="status"
                 required
-                className="bg-[#00140D] text-base py-4 px-5 rounded-lg outline-none"
+                className="bg-[#00140D] text-sm py-4 pl-5 rounded-lg outline-none"
                 value={formData.status}
                 onChange={handleChange}
               >
-                <option disabled value="">Selecione o status do dispositivo</option>
+                <option disabled value="">Selecione o status</option>
                 {status.map((st) => (
                   <option key={st.id} value={st.status}>
                     {st.status}
@@ -200,7 +200,7 @@ export function AddNew() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="orcamento" className='text-lg font-semibold'>Orçamento</label>
+              <label htmlFor="orcamento" >Orçamento</label>
               <Input name="orcamento" id="orcamento" required placeholder="R$" value={formData.orcamento} onChange={handleChange} />
             </div>
 
@@ -212,11 +212,6 @@ export function AddNew() {
               <Dialog.Close type="button" className="bg-zinc-500 px-5 h-10 rounded-md font-semiBold hover:bg-zinc-600">Cancelar</Dialog.Close>
             </footer>
           </form>
-          <Dialog.Close asChild>
-              <button className="rounded-full h-7 w-7 inline-flex items-center justify-center absolute top-8 right-8 outline-none" aria-label="Close">
-                  <X size={32} />
-              </button>
-          </Dialog.Close>
       </Dialog.Content>
     </Dialog.Portal>
   );
