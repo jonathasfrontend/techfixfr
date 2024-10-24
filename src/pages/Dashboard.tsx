@@ -8,6 +8,8 @@ import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from '../assets/logo.jpg';
+import FormSearch from '../components/forms/FormSearch';
 
 interface ClienteData {
   cliente: {
@@ -26,11 +28,8 @@ interface Order extends ClienteData, OrdemData {}
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  
-  const [searchTerm, setSearchTerm] = useState('');  // Estado para capturar o valor de pesquisa
   const [orders, setOrder] = useState<Order[]>([]);
 
-  // Verificação de autenticação
   useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
     if (!token) {
@@ -40,7 +39,6 @@ export default function Dashboard() {
     }
   }, [navigate]);
 
-  // Busca das últimas ordens
   useEffect(() => {
     async function getOrders() {
       try {
@@ -52,39 +50,6 @@ export default function Dashboard() {
     }
     getOrders();
   }, []);
-
-
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!searchTerm.trim()) {
-      toast.info('Por favor, insira um termo de pesquisa válido');
-      return;
-    }
-
-    try {
-      const response = await api.get(`/pesquisa/${searchTerm}`);
-      
-      if (response.data.length === 0) {
-        toast.warn('Nenhum cliente encontrado com essas informações');
-      } else {
-        navigate('/search', { state: { results: response.data } });
-      }
-    } catch (error: any) {
-      if (error.response) {
-        switch (error.response.status) {
-          case 404:
-            toast.warn('Cliente não encontrado');
-            break;
-          case 500:
-            toast.error('Erro no servidor, tente novamente mais tarde');
-            break;
-          default:
-            toast.error('Erro desconhecido, tente novamente');
-        }
-      }
-    }
-  };
 
   return (
     <div className='min-h-screen bg'>
@@ -103,34 +68,18 @@ export default function Dashboard() {
       />
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
-        <div className='w-1/2'>
-          <h1 className='text-2xl text-white font-bold'>Tech fix FR Dashboard</h1>
+        <div className='w-1/2 flex items-center'>
+          <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
+          <h1 className='text-2xl text-white font-bold'>Dashboard</h1>
         </div>
 
         <div className='flex items-center justify-between'>
-          <form
-            className='w-[330px] h-[38px] bg-[#ffffff3c] rounded-full overflow-hidden flex items-center border-[1px] border-solid border-white'
-            onSubmit={handleSearch} 
-          >
-            <input 
-              className='w-full h-full bg-[#ffffff00] rounded-full outline-none px-3 font-medium text-sm placeholder:text-[#ffffff9f] text-white'
-              type="search"
-              id="search"
-              name="search"
-              autoComplete="off"
-              placeholder="Pesquise... (CPF) (Nome) (Telefone)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type='submit' className='w-14 h-full bg-[#ffffff3c] flex items-center justify-center hover:bg-[#ffffff75]'>
-              <MagnifyingGlass className=' w-5 h-full text-white' />
-            </button>
-          </form>
+          <FormSearch />
 
           <div>
             <Dialog.Root>
               <Dialog.Trigger asChild className='cursor-pointer'>
-                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-lg ml-5 hover:bg-[#2eb600d8] outline-none'>
+                <button className='p-3 bg-[#2FB600] flex items-center justify-center rounded-md ml-5 hover:bg-[#2eb600d8] outline-none'>
                   <Plus className='w-6 h-6 text-white' />
                 </button>
               </Dialog.Trigger>

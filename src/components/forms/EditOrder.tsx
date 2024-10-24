@@ -136,12 +136,12 @@ export function EditOrder() {
                 transition={Bounce}
             />
 
-            <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[90%] w-[480px] shadow-lg shadow-black/25">
+            <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25">
                 <Dialog.Title className="text-3xl text-white font-black inter">Editar Ordem</Dialog.Title>
 
                 <div className="w-full flex mt-5">
                     {ordens.map((ordem) => (
-                        <button onClick={() => handleEdit(ordem)} key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-lg mr-2 hover:bg-[#00140d82] text-sm outline-none'>
+                        <button onClick={() => handleEdit(ordem)} key={ordem.id} className='p-3 bg-[#00140D] flex items-center justify-center rounded-md mr-2 hover:bg-[#00140d82] text-sm outline-none'>
                             {ordem.info_produto}
                         </button>
                     ))}
@@ -171,7 +171,7 @@ export function EditOrder() {
                                     name="categoria"
                                     id="categoria"
                                     required
-                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-lg outline-none"
+                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
                                     value={selectedOrdem.categoria}
                                     onChange={handleChange}
                                 >
@@ -190,7 +190,7 @@ export function EditOrder() {
                                     name="status"
                                     id="status"
                                     required
-                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-lg outline-none"
+                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
                                     value={selectedOrdem.status}
                                     onChange={handleChange}
                                 >

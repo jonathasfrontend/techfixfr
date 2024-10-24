@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { CircleNotch, Eye, EyeSlash } from '@phosphor-icons/react';
+import logo from '../assets/logo.jpg';
 
 type SignInData = {
   email: string;
@@ -47,14 +48,14 @@ export default function Login() {
       />
 
       <header className="absolute top-0 left-0 w-full flex items-center justify-between px-16 py-3">
-        <div className="w-1/2">
-          <h1 className="text-2xl text-white font-bold">Tech fix FR</h1>
+        <div className='w-1/2 flex items-center'>
+          <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
         </div>
       </header>
 
       <form className="w-[350px] gap-3" onSubmit={handleSubmit(handleSignIn)}>
-        <h2 className="mt-6 text-center text-4xl font-bold text-white">
-          Login
+        <h2 className="font-bold text-gray-400 text-2xl">
+          Acesse sua conta
         </h2>
         <div>
           <input
@@ -64,11 +65,11 @@ export default function Login() {
             type="email"
             autoComplete="email"
             required
-            className="w-full h-[40px] pl-3 rounded-lg mt-3 bg-neutral-700 placeholder-zinc-200 text-white placeholder:text-sm placeholder:font-medium outline-none"
+            className="w-full h-[40px] text-sm pl-3 rounded-md mt-3 bg-[#031003fd] placeholder-gray-400 text-white placeholder:text-sm placeholder:font-medium outline-none"
             placeholder="Seu email"
           />
         </div>
-        <div className="w-full h-[40px] mt-3 bg-neutral-700 rounded-lg overflow-hidden flex items-center justify-between">
+        <div className="w-full h-[40px] mt-3 bg-[#031003fd] rounded-md overflow-hidden flex items-center justify-between">
           <input
             {...register('senha')}
             id="senha"
@@ -76,13 +77,13 @@ export default function Login() {
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             required
-            className="w-full px-3 bg-neutral-700 placeholder-zinc-200 text-white placeholder:text-sm placeholder:font-medium outline-none"
+            className="w-full px-3 bg-[#031003fd] text-sm placeholder-gray-400 text-white placeholder:text-sm placeholder:font-medium outline-none"
             placeholder="Sua senha"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className=" text-gray-400 hover:text-gray-200 w-10 h-full "
+            className=" text-gray-400 hover:text-gray-200 w-9 h-full "
           >
             {showPassword ? <EyeSlash  className='w-full h-full pr-3'/> : <Eye  className='w-full h-full pr-3'/>}
           </button>
@@ -91,7 +92,7 @@ export default function Login() {
         <div>
           <button
             type="submit"
-            className="w-full h-[40px] outline-none text-sm font-medium rounded-lg mt-3 text-white bg-[#2FB600] hover:bg-[#2eb600e2] flex items-center justify-center"
+            className="w-full h-[40px] outline-none text-sm font-medium rounded-md mt-3 text-white bg-[#2FB600] hover:bg-[#2eb600e2] flex items-center justify-center"
             disabled={isLoading}
           >
             {isLoading ? (

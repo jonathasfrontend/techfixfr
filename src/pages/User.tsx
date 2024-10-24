@@ -8,6 +8,7 @@ import { IconUser } from '../components/IconUser';
 import * as Dialog from '@radix-ui/react-dialog';
 import { NewOrder } from '../components/forms/NewOrder';
 import { EditOrder } from '../components/forms/EditOrder';
+import logo from '../assets/logo.jpg';
 
 interface ClienteData {
   cpf: string;
@@ -63,6 +64,7 @@ export default function User() {
                 <CaretLeft size={24} />
             </div>
           </a>
+          <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
           <h1 className='text-2xl flex items-center text-white font-bold'><IconUser />{cliente?.nome}</h1>
         </div>
 

@@ -119,7 +119,7 @@ export function AddNew() {
         theme="light"
         transition={Bounce}
       />
-      <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg h-[90%] w-[480px] shadow-lg shadow-black/25">
+      <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25">
         <Dialog.Title className="text-3xl text-white font-black Inter">Adicionar novo cliente</Dialog.Title>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
@@ -167,7 +167,7 @@ export function AddNew() {
                 name="categoria"
                 id="category"
                 required
-                className="bg-[#00140D] text-sm py-4 pl-5 rounded-lg outline-none"
+                className="bg-[#00140D] text-sm py-4 pl-5 rounded-md outline-none"
                 value={formData.categoria}
                 onChange={handleChange}
               >
@@ -186,7 +186,7 @@ export function AddNew() {
                 name="status"
                 id="status"
                 required
-                className="bg-[#00140D] text-sm py-4 pl-5 rounded-lg outline-none"
+                className="bg-[#00140D] text-sm py-4 pl-5 rounded-md outline-none"
                 value={formData.status}
                 onChange={handleChange}
               >

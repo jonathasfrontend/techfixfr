@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { parseCookies } from "nookies";
-import { useNavigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
-import { MagnifyingGlass, Plus } from '@phosphor-icons/react';
-import { api } from '../services/api';
+import { CaretLeft, Plus } from '@phosphor-icons/react';
 import { AddNew } from '../components/forms/AddNew';
 import { useLocation } from 'react-router-dom';
 import { Card } from '../components/Card';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from '../assets/logo.jpg';
+import FormSearch from '../components/forms/FormSearch';
 
 
 export default function Search() {
 
     const navigate = useNavigate();
-  
-    const [searchTerm, setSearchTerm] = useState(''); 
   
     useEffect(() => {
       const { "nextauth.token": token } = parseCookies();
@@ -25,35 +24,6 @@ export default function Search() {
         return;
       }
     }, [navigate]);
-  
-    const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-  
-      if (!searchTerm.trim()) {
-        toast.info('Por favor, insira um termo de pesquisa válido');
-        return;
-      }
-  
-      try {
-        const response = await api.get(`/pesquisa/${searchTerm}`);
-        
-        if (response.data.length === 0) {
-          toast.warn('Nenhum cliente encontrado com essas informações');
-        } else {
-          navigate('/search', { state: { results: response.data } });
-        }
-      } catch (error: any) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 404:
-              toast.warn('Cliente não encontrado');
-              break;
-            case 500:
-              toast.error('Erro no servidor, tente novamente mais tarde');
-          }
-        }
-      }
-    };
 
   const location = useLocation();
   const { results } = location.state || { results: [] };
@@ -75,29 +45,18 @@ export default function Search() {
       />
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
-        <div className='w-1/2'>
-          <h1 className='text-2xl text-white font-bold'>Tech fix FR Pesquisa</h1>
+        <div className='w-1/2 flex items-center'>
+          <a href="/dashboard">
+            <div className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" >
+                <CaretLeft size={24} />
+            </div>
+          </a>
+          <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
+          <h1 className='text-2xl text-white font-bold'>Pesquisa</h1>
         </div>
 
         <div className='flex items-center justify-between'>
-          <form
-            className='w-[330px] h-[38px] bg-[#ffffff3c] rounded-full overflow-hidden flex items-center border-[1px] border-solid border-white'
-            onSubmit={handleSearch} 
-          >
-            <input 
-              className='w-full h-full bg-[#ffffff00] rounded-full outline-none px-3 font-medium text-sm placeholder:text-[#ffffff9f] text-white'
-              type="search"
-              id="search"
-              name="search"
-              autoComplete="off"
-              placeholder="Pesquise... (CPF) (Nome) (Telefone)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button type='submit' className='w-14 h-full bg-[#ffffff3c] flex items-center justify-center hover:bg-[#ffffff75]'>
-              <MagnifyingGlass className=' w-5 h-full text-white' />
-            </button>
-          </form>
+          <FormSearch />
 
           <div>
             <Dialog.Root>
