@@ -6,6 +6,8 @@ import { CircleNotch, MagnifyingGlass, Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ClienteData {
   cliente: {
@@ -28,6 +30,7 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState('');  // Estado para capturar o valor de pesquisa
   const [orders, setOrder] = useState<Order[]>([]);
 
+  // Verificação de autenticação
   useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
     if (!token) {
@@ -37,31 +40,67 @@ export default function Dashboard() {
     }
   }, [navigate]);
 
+  // Busca das últimas ordens
   useEffect(() => {
     async function getOrders() {
-      const response = await api.get('/ultimas-ordens');
-      const reversedOrders = response.data;
-      setOrder(reversedOrders);
+      try {
+        const response = await api.get('/ultimas-ordens');
+        setOrder(response.data);
+      } catch (error) {
+        toast.error('Erro ao carregar as últimas ordens');
+      }
     }
     getOrders();
   }, []);
 
+
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (searchTerm.trim()) {
-      try {
-        const response = await api.get(`/pesquisa/${searchTerm}`);
-        
+    if (!searchTerm.trim()) {
+      toast.info('Por favor, insira um termo de pesquisa válido');
+      return;
+    }
+
+    try {
+      const response = await api.get(`/pesquisa/${searchTerm}`);
+      
+      if (response.data.length === 0) {
+        toast.warn('Nenhum cliente encontrado com essas informações');
+      } else {
         navigate('/search', { state: { results: response.data } });
-      } catch (error) {
-        console.error("Erro ao realizar a pesquisa:", error);
+      }
+    } catch (error: any) {
+      if (error.response) {
+        switch (error.response.status) {
+          case 404:
+            toast.warn('Cliente não encontrado');
+            break;
+          case 500:
+            toast.error('Erro no servidor, tente novamente mais tarde');
+            break;
+          default:
+            toast.error('Erro desconhecido, tente novamente');
+        }
       }
     }
   };
 
   return (
     <div className='min-h-screen bg'>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2'>

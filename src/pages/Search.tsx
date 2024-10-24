@@ -6,6 +6,9 @@ import { MagnifyingGlass, Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { AddNew } from '../components/forms/AddNew';
 import { useLocation } from 'react-router-dom';
+import { Card } from '../components/Card';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Search() {
@@ -19,20 +22,35 @@ export default function Search() {
       if (!token) {
         navigate('/');
       } else {
-        navigate('/search');
+        return;
       }
     }, [navigate]);
   
     const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
-      if (searchTerm.trim()) {
-        try {
-          const response = await api.get(`/pesquisa/${searchTerm}`);
-          
+      if (!searchTerm.trim()) {
+        toast.info('Por favor, insira um termo de pesquisa válido');
+        return;
+      }
+  
+      try {
+        const response = await api.get(`/pesquisa/${searchTerm}`);
+        
+        if (response.data.length === 0) {
+          toast.warn('Nenhum cliente encontrado com essas informações');
+        } else {
           navigate('/search', { state: { results: response.data } });
-        } catch (error) {
-          console.error("Erro ao realizar a pesquisa:", error);
+        }
+      } catch (error: any) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 404:
+              toast.warn('Cliente não encontrado');
+              break;
+            case 500:
+              toast.error('Erro no servidor, tente novamente mais tarde');
+          }
         }
       }
     };
@@ -42,10 +60,23 @@ export default function Search() {
 
   return (
     <div className='min-h-screen bg'>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2'>
-          <h1 className='text-2xl text-white font-bold'>Tech fix FR Dashboard</h1>
+          <h1 className='text-2xl text-white font-bold'>Tech fix FR Pesquisa</h1>
         </div>
 
         <div className='flex items-center justify-between'>
@@ -81,22 +112,28 @@ export default function Search() {
         </div>
       </header>
 
-      <h1>Resultados da Pesquisa</h1>
-      {results.length > 0 ? (
-        <ul>
-          {results.map((result: any) => (
-            <li key={result.id}>
-              <p>Nome: {result.nome}</p>
-              <p>CPF: {result.cpf}</p>
-              <p>Telefone: {result.telefone}</p>
-              <p>Data: {result.data}</p>
-              <p>Status: {result.fk_status_id}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nenhum resultado encontrado.</p>
-      )}
+      <div className='relative mt-3 w-full overflow-auto px-16'>
+        <h1 className='font-medium mb-3 text-1xl text-[#b6b6b6]'>Resultados da Pesquisa</h1>
+        
+        {results.map((result: any) => (
+
+          result.ordem.length > 0 && (
+            result.ordem.map((ordem: any) => (
+              <Card
+                key={ordem.id}
+                id={ordem.id}
+                nome={result.nome}
+                telefone={result.telefone}
+                cpf={result.cpf}
+                data={ordem.data}
+                fk_status_id={ordem.fk_status_id}
+              />
+            ))
+          )
+        )) || (
+          <p className='font-medium mb-3 text-1xl text-[#ff4242]'>Nenhum resultado encontrado.</p>
+        )}
+      </div>
     </div>
   );
 }
