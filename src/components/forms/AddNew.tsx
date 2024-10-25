@@ -6,7 +6,6 @@ import { api } from "../../services/api";
 import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
-import { formatCpf, formatTelefone } from '../../services/formatters';
 
 interface Categoria {
   id: number;
