@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CircleNotch, MagnifyingGlass, Plus } from '@phosphor-icons/react';
+import { CircleNotch, Plus } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';

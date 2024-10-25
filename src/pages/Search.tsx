@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { parseCookies } from "nookies";
-import { Form, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import { CaretLeft, Plus } from '@phosphor-icons/react';
 import { AddNew } from '../components/forms/AddNew';
