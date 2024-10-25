@@ -49,7 +49,7 @@ export default function FormSearch() {
                 id="search"
                 name="search"
                 autoComplete="off"
-                placeholder="Pesquise... (CPF) (Nome) (Telefone)"
+                placeholder='Pesquise... "CPF" "Nome" "Telefone"'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />

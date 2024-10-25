@@ -2,7 +2,8 @@ import { useStatus } from '../hooks/useStatus';
 import { useCategoria } from '../hooks/useCategoria';
 import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
-import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo } from '@phosphor-icons/react';
+import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X } from '@phosphor-icons/react';
+import dayjs from 'dayjs'; // Biblioteca para manipulação de datas
 
 interface ClienteData {
   cpf: string;
@@ -13,7 +14,7 @@ interface ClienteData {
 
 interface OrdemData {
   id: string;
-  data: string;
+  data: string; // Data de criação da ordem
   info_produto: string;
   defeito: string;
   solucao: string;
@@ -30,7 +31,12 @@ export function CardUserAccordion(props: CardProps) {
   const { statusColor, statusText, statusBgColor } = useStatus(props.fk_status_id);
   const { categoriaText } = useCategoria(props.fk_categoria_id);
   const isClosed = statusText === 'Concluído' || statusText === 'Cancelado';
-  
+
+  // Calcula o status da garantia com base na data da ordem
+  const orderDate = dayjs(props.data); // Data de criação da ordem
+  const currentDate = dayjs(); // Data atual
+  const isWithinWarranty = currentDate.diff(orderDate, 'month') < 1; // Verifica se está dentro do período de um mês
+
   return (
     <Accordion.Root
       className="w-full mb-5"
@@ -79,12 +85,8 @@ export function CardUserAccordion(props: CardProps) {
             <p className='font-normal text-xs ml-5 mt-2 text-neutral-400'>{props.solucao}</p>
           </div>
 
-          <button className='bg-[#2FB600] flex items-center px-5 py-2 mt-6 rounded-full text-white text-sm font-semibold '>
-            Na Garantia <Check className='w-5 h-5 ml-2'/>
-          </button>
-
           <div className='w-full mt-5 flex items-center justify-between'>
-            <div className='flex items-center'>
+            <div className='flex items-center mt-6'>
               <h1 className='text-white text-sm font-semibold'>Orçamento: <span className='font-bold'>R${props.orcamento}</span></h1>
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <Tag className='w-4 h-4 mr-1'/>{categoriaText}
@@ -92,6 +94,10 @@ export function CardUserAccordion(props: CardProps) {
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <CalendarBlank className='w-4 h-4 mr-1' />{formatDate(props.data)}
               </p>
+            </div>
+            <div className={`flex items-center px-5 py-2 rounded-full text-white text-sm font-semibold ${isWithinWarranty ? 'bg-[#2FB600]' : 'bg-red-600'}`}>
+              {isWithinWarranty ? 'Na Garantia  ' : 'Fora da Garantia'}
+              {isWithinWarranty ? <Check className='ml-2 w-4 h-4' /> : <X className='w-5 h-5 ml-2'/>}
             </div>
           </div>
         </Accordion.Content>

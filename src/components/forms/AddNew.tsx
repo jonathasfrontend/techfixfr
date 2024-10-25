@@ -6,6 +6,7 @@ import { api } from "../../services/api";
 import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
+import { formatCpf, formatTelefone } from '../../services/formatters';
 
 interface Categoria {
   id: number;
@@ -56,9 +57,31 @@ export function AddNew() {
     fetchStatus();
   }, []);
 
+  const formatCPF = (value: string) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+      .slice(0, 14);
+  };
+
+  const formatPhone = (value: string) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .slice(0, 15);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    let formattedValue = value;
+    if (name === 'cpf') formattedValue = formatCPF(value);
+    if (name === 'telefone') formattedValue = formatPhone(value);
+
+    setFormData((prev) => ({ ...prev, [name]: formattedValue }));
   };
 
   function notify(){
@@ -75,13 +98,16 @@ export function AddNew() {
         throw new Error('Categoria ou Status inválido');
       }
 
-      const newOrder = {
+      // Remover formatação antes de enviar
+      const unformattedData = {
         ...formData,
+        cpf: formData.cpf.replace(/\D/g, ''), // Remove todos os caracteres não numéricos
+        telefone: formData.telefone.replace(/\D/g, ''), // Remove todos os caracteres não numéricos
         fk_categoria_id: selectedCategoria.id,
         fk_status_id: selectedStatus.id
       };
 
-      await api.post('/cliente-e-ordem', newOrder);
+      await api.post('/cliente-e-ordem', unformattedData);
       setFormData({
         nome: '',
         telefone: '',
@@ -94,14 +120,13 @@ export function AddNew() {
         status: '',
         orcamento: ''
       });
-      notify()
+      notify();
 
     } catch (error) {
       console.error('Erro ao cadastrar cliente e ordem:', error);
       alert('Erro ao cadastrar.');
     }
   };
-
 
   return (
     <Dialog.Portal>
@@ -132,12 +157,12 @@ export function AddNew() {
 
             <div className="flex items-center gap-2">
               <div className="flex flex-col w-full">
-                <label htmlFor="telefone" >Telefone</label>
-                <Input name="telefone" id="telefone" className='w-1/2' required placeholder="(42) 99999-9999" value={formData.telefone} onChange={handleChange} />
+                <label htmlFor="telefone">Telefone</label>
+                <Input name="telefone" id="telefone" required placeholder="(42) 99999-9999" value={formData.telefone} onChange={handleChange} />
               </div>
               <div className="flex flex-col w-full">
-                <label htmlFor="cpf" >CPF</label>
-                <Input name="cpf" id="cpf" className='w-1/2' required placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
+                <label htmlFor="cpf">CPF</label>
+                <Input name="cpf" id="cpf" required placeholder="000.000.000-00" value={formData.cpf} onChange={handleChange} />
               </div>
             </div>
 
