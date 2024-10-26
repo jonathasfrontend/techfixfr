@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { parseCookies } from "nookies";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import { CaretLeft, Plus } from '@phosphor-icons/react';
 import { AddNew } from '../components/forms/AddNew';
@@ -46,11 +46,11 @@ export default function Search() {
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2 flex items-center'>
-          <a href="/dashboard">
+          <Link to={'/dashboard'}>
             <div className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" >
-                <CaretLeft size={24} />
+              <CaretLeft size={24} />
             </div>
-          </a>
+          </Link>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
           <h1 className='text-2xl text-white font-bold'>Pesquisa</h1>
         </div>

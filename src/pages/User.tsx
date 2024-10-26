@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { parseCookies } from "nookies";
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from "../services/api";
 import { CaretLeft, CircleNotch, NotePencil, Plus } from '@phosphor-icons/react';
 import { CardUserAccordion } from '../components/CardUserAccordion';
@@ -59,11 +59,11 @@ export default function User() {
     <div className='min-h-screen bg'>
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2 flex items-center'>
-          <a href="/dashboard">
-            <div className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" >
-                <CaretLeft size={24} />
-            </div>
-          </a>
+        <Link to={'/dashboard'}>
+          <div className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" >
+            <CaretLeft size={24} />
+          </div>
+        </Link>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
           <h1 className='text-2xl flex items-center text-white font-bold'><IconUser />{cliente?.nome}</h1>
         </div>

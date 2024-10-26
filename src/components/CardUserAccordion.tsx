@@ -4,6 +4,7 @@ import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
 import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X } from '@phosphor-icons/react';
 import dayjs from 'dayjs'; // Biblioteca para manipulação de datas
+import { Link } from 'react-router-dom';
 
 interface ClienteData {
   cpf: string;
@@ -32,10 +33,9 @@ export function CardUserAccordion(props: CardProps) {
   const { categoriaText } = useCategoria(props.fk_categoria_id);
   const isClosed = statusText === 'Concluído' || statusText === 'Cancelado';
 
-  // Calcula o status da garantia com base na data da ordem
-  const orderDate = dayjs(props.data); // Data de criação da ordem
-  const currentDate = dayjs(); // Data atual
-  const isWithinWarranty = currentDate.diff(orderDate, 'month') < 1; // Verifica se está dentro do período de um mês
+  const orderDate = dayjs(props.data);
+  const currentDate = dayjs();
+  const isWithinWarranty = currentDate.diff(orderDate, 'month') < 3;
 
   return (
     <Accordion.Root
@@ -48,7 +48,7 @@ export function CardUserAccordion(props: CardProps) {
 
         <Accordion.Header>
           <Accordion.Trigger className='AccordionTrigger text-xl text-white w-full flex items-center justify-between'>
-            <h1 className='font-semibold text-base'>Codigo da ordem <span className='ml-2 text-neutral-500'>{props.id}</span> </h1>
+            <h1 className='font-bold text-base'>Codigo da ordem <span className='ml-2 text-neutral-500'>{props.id}</span> </h1>
             <div className='flex items-center'>
               <h1 className={`text-base font-semibold ${statusColor} ${statusBgColor}`}>{statusText}</h1>
               <CaretDown size={24} className="ml-2 transition-transform duration-200 accordion-icon" />
@@ -60,29 +60,27 @@ export function CardUserAccordion(props: CardProps) {
           <p className='text-xs font-medium my-2 text-white'>CPF: <span className='ml-2 text-neutral-500'>{formatCpf(props.cpf)}</span></p>
 
           <div className='p-1 rounded-md bg-gradient-to-t from-[#128c7e] to-[#25d366] w-[160px]'>
-            <a href={`https://api.whatsapp.com/send?phone=${props.telefone}`} 
-              className='w-8 h-8'
-            >
+            <Link to={`https://api.whatsapp.com/send?phone=${props.telefone}`} className='w-8 h-8'>
               <div className='w-full h-full flex items-center justify-center'>
                 <WhatsappLogo className='text-white h-6 w-6 mr-2' />
                 <p className='flex items-center text-sm font-medium text-white'>{formatTelefone(props.telefone)}</p>
               </div>
-            </a>
+            </Link>
           </div>
 
           <p className='text-xs font-medium mt-2 text-white'>Endereço: <span className='mr-2 text-neutral-500'>{props.endereco}</span></p>
 
           <div className='w-full bg-[#00000052] rounded-md my-3 p-3'>
-            <h1 className='font-medium text-sm text-white ml-5'>Informações do Produto:</h1>
-            <p className='font-normal text-xs ml-5 mt-2 text-neutral-400'>{props.info_produto}</p>
+            <h1 className='font-semibold text-sm text-white ml-5'>Informações do Produto:</h1>
+            <p className='font-medium text-xs ml-5 mt-2 text-neutral-400'>{props.info_produto}</p>
           </div>
           <div className='w-full bg-[#00000052] rounded-md my-3 p-3'>
-            <h1 className='font-medium text-sm text-white ml-5'>Relato do Cliente:</h1>
-            <p className='font-normal text-xs ml-5 mt-2 text-neutral-400'>{props.defeito}</p>
+            <h1 className='font-semibold text-sm text-white ml-5'>Relato do Cliente:</h1>
+            <p className='font-medium text-xs ml-5 mt-2 text-neutral-400'>{props.defeito}</p>
           </div>
           <div className='w-full bg-[#00000052] rounded-md my-3 p-3'>
-            <h1 className='font-medium text-sm text-white ml-5'>Diagnóstico e serviço a ser prestado:</h1>
-            <p className='font-normal text-xs ml-5 mt-2 text-neutral-400'>{props.solucao}</p>
+            <h1 className='font-semibold text-sm text-white ml-5'>Diagnóstico e serviço a ser prestado:</h1>
+            <p className='font-medium text-xs ml-5 mt-2 text-neutral-400'>{props.solucao}</p>
           </div>
 
           <div className='w-full mt-5 flex items-center justify-between'>

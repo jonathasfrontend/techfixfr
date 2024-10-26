@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { parseCookies } from "nookies";
+import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
-import { CircleNotch, Plus } from '@phosphor-icons/react';
+import { CircleNotch, Plus, SignOut } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
 import { AddNew } from '../components/forms/AddNew';
@@ -51,6 +51,11 @@ export default function Dashboard() {
     getOrders();
   }, []);
 
+  const handleSignOut = () => {
+    destroyCookie(null, "nextauth.token");
+    navigate('/');
+  };
+
   return (
     <div className='min-h-screen bg'>
       <ToastContainer
@@ -69,6 +74,9 @@ export default function Dashboard() {
 
       <header className='w-full flex items-center justify-between px-16 py-3'>
         <div className='w-1/2 flex items-center'>
+          <button className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" onClick={handleSignOut}>
+              <SignOut size={24} />
+          </button>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
           <h1 className='text-2xl text-white font-bold'>Dashboard</h1>
         </div>
