@@ -11,6 +11,7 @@ import { EditOrder } from '../components/forms/EditOrder';
 import logo from '../assets/logo.jpg';
 
 interface ClienteData {
+  id: string;
   cpf: string;
   nome: string;
   endereco: string;
@@ -31,7 +32,7 @@ interface OrdemData {
 }
 
 export default function User() {
-  const { cpf } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [cliente, setCliente] = useState<ClienteData | null>(null);
@@ -43,17 +44,18 @@ export default function User() {
     if (!token) {
       navigate('/');
     } else {
-      api.get(`/produto/${cpf}`).then(response => {
+      api.get(`/produto/${id}`).then(response => {
         setCliente(response.data.cliente);
         const reversedOrders = [...response.data.ordens].reverse();
         setOrdens(reversedOrders);
+        console.log(response.data);
 
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);
       });
     }
-  }, [cpf, navigate]);
+  }, [id, navigate]);
 
   return (
     <div className='min-h-screen bg'>

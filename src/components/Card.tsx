@@ -4,15 +4,16 @@ import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import { useStatus } from '../hooks/useStatus';
 
 interface ClienteData {
-    cpf: string;
-    nome: string;
-    telefone: string;
+  id: string;
+  cpf: string;
+  nome: string;
+  telefone: string;
 }
   
 interface OrdemData {
-    id: string;
-    data: string;
-    fk_status_id: number;
+  id: string;
+  data: string;
+  fk_status_id: number;
 }
 interface CardProps extends ClienteData, OrdemData {}
 
@@ -23,7 +24,7 @@ export function Card(props: CardProps ) {
     <div className={`w-full h-full relative rounded-md border-solid border-[1px] text-white bg-[#121214a3] ${statusColor} px-5 py-2 overflow-hidden`}>
 
       <div className='w-full flex items-center justify-between'>
-        <Link to={`/produto/${props.cpf}`}>
+        <Link to={`/cliente/${props.id}`}>
           <h1 className='flex items-center text-base font-medium'>
             <User size={20} className='mr-2' />
             {props.nome}

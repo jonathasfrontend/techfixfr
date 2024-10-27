@@ -21,7 +21,7 @@ interface Status {
 export function NewOrder() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [status, setStatus] = useState<Status[]>([]);
-    const [cpfCliente, setCpfCliente] = useState<string>('');
+    const [idCliente, setIdCliente] = useState<string>('');
     const [formData, setFormData] = useState({
         info_produto: '',
         defeito: '',
@@ -31,7 +31,7 @@ export function NewOrder() {
         orcamento: ''
     });
 
-    const { cpf } = useParams();
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -52,10 +52,10 @@ export function NewOrder() {
             }
         };
         
-        const fetchCpfCliente = async () => {
+        const fetchIdCliente = async () => {
             try {
-                const response = await api.get(`/produto/${cpf}`);
-                setCpfCliente(response.data.cliente.cpf);
+                const response = await api.get(`/produto/${id}`);
+                setIdCliente(response.data.cliente.id);
             } catch (error) {
                 console.error('Erro ao buscar CPF do cliente:', error);
             }
@@ -63,8 +63,8 @@ export function NewOrder() {
 
         fetchCategorias();
         fetchStatus();
-        fetchCpfCliente();
-    }, [cpf]);
+        fetchIdCliente();
+    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -72,7 +72,7 @@ export function NewOrder() {
     };
 
     function notify() {
-        toast.success('Formulario enviado com sucesso!');
+        toast.success('Nova ordem de serviço criada com sucesso!');
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,7 +92,7 @@ export function NewOrder() {
             };
 
             // Usando o CPF obtido para cadastrar a nova ordem
-            await api.post(`cliente/${cpfCliente}/ordem`, newOrder);
+            await api.post(`cliente/${idCliente}/ordem`, newOrder);
             setFormData({
                 info_produto: '',
                 defeito: '',

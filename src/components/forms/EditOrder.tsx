@@ -29,7 +29,7 @@ interface Ordem {
 }
 
 export function EditOrder() {
-    const { cpf } = useParams();
+    const { id } = useParams();
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [statusList, setStatus] = useState<Status[]>([]);
     const [ordens, setOrdens] = useState<Ordem[]>([]);
@@ -56,7 +56,7 @@ export function EditOrder() {
 
         const fetchOrdens = async () => {
             try {
-                const response = await api.get(`/produto/${cpf}`);
+                const response = await api.get(`/produto/${id}`);
                 setOrdens(response.data.ordens);
             } catch (error) {
                 console.error('Erro ao buscar ordens:', error);
@@ -66,7 +66,7 @@ export function EditOrder() {
         fetchCategorias();
         fetchStatus();
         fetchOrdens();
-    }, [cpf]);
+    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         if (selectedOrdem) {
@@ -105,8 +105,8 @@ export function EditOrder() {
                 fk_status_id: selectedStatus.id,
             };
             
-            await api.put(`/cliente/${cpf}/ordem/${id}`, updatedOrder);
-            console.log('Ordem atualizada:', updatedOrder, `/cliente/${cpf}/ordem/${id}`);
+            await api.put(`/cliente/${id}/ordem/${id}`, updatedOrder);
+            console.log('Ordem atualizada:', updatedOrder, `/cliente/${id}/ordem/${id}`);
 
             notifySuccess();
         } catch (error) {

@@ -13,6 +13,7 @@ import FormSearch from '../components/forms/FormSearch';
 
 interface ClienteData {
   cliente: {
+    id: string;
     cpf: string;
     nome: string;
     telefone: string;
@@ -20,9 +21,13 @@ interface ClienteData {
 }
 
 interface OrdemData {
-  id: string;
-  data: string;
-  fk_status_id: number;
+  ordens:[
+    {
+      id: string;
+      data: string;
+      fk_status_id: number;
+    }
+  ]
 }
 interface Order extends ClienteData, OrdemData {}
 
@@ -101,13 +106,13 @@ export default function Dashboard() {
         {orders.length > 0 ? (
           orders.map((order) => (
             <Card
-              key={order.id}
-              id={order.id}
+              key={order.cliente.id}
+              id={order.cliente.id}
               nome={order.cliente.nome}
               telefone={order.cliente.telefone}
               cpf={order.cliente.cpf}
-              fk_status_id={order.fk_status_id}
-              data={order.data}
+              fk_status_id={order.ordens[0]?.fk_status_id}  // Acessando o primeiro item de 'ordens'
+              data={order.ordens[0]?.data}                  // Acessando o primeiro item de 'ordens'
             />
           ))
         ) : (
@@ -116,6 +121,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
     </div>
   );
 }

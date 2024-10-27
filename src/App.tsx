@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/produto/:cpf" element={<User />} />
+          <Route path="/cliente/:id" element={<User />} />
           <Route path="/search" element={<Search />} />
         </Routes>
       </AuthProvider>
