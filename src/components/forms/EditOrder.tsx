@@ -23,50 +23,38 @@ interface Ordem {
     info_produto: string;
     defeito: string;
     solucao: string;
-    categoria: string;
-    status: string;
+    fk_categoria_id: string;
+    fk_status_id: string;
     orcamento: string;
 }
 
 export function EditOrder() {
-    const { id } = useParams();
+    const { id: idCliente } = useParams();
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [statusList, setStatus] = useState<Status[]>([]);
+    const [statusList, setStatusList] = useState<Status[]>([]);
     const [ordens, setOrdens] = useState<Ordem[]>([]);
     const [selectedOrdem, setSelectedOrdem] = useState<Ordem | null>(null);
 
     useEffect(() => {
-        const fetchCategorias = async () => {
+        const fetchData = async () => {
             try {
-                const response = await api.get('/categoria');
-                setCategorias(response.data);
-            } catch (error) {
-                console.error('Erro ao buscar categorias:', error);
-            }
-        };
+                const [categoriaResponse, statusResponse, ordemResponse] = await Promise.all([
+                    api.get('/categoria'),
+                    api.get('/status'),
+                    api.get(`/produto/${idCliente}`)
+                ]);
     
-        const fetchStatus = async () => {
-            try {
-                const response = await api.get('/status');
-                setStatus(response.data);
-            } catch (error) {
-                console.error('Erro ao buscar status:', error);
-            }
-        };
+                setCategorias(categoriaResponse.data);
+                setStatusList(statusResponse.data);
+                setOrdens(ordemResponse.data.ordens);
 
-        const fetchOrdens = async () => {
-            try {
-                const response = await api.get(`/produto/${id}`);
-                setOrdens(response.data.ordens);
             } catch (error) {
-                console.error('Erro ao buscar ordens:', error);
+                console.error('Erro ao buscar dados:', error);
             }
         };
+        fetchData();
+    }, [idCliente]);
     
-        fetchCategorias();
-        fetchStatus();
-        fetchOrdens();
-    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         if (selectedOrdem) {
@@ -75,27 +63,22 @@ export function EditOrder() {
         }
     };
 
-    function notifySuccess() {
-        toast.success('Ordem atualizada com sucesso!');
-    }
-    
-    function notifyError() {
-        toast.error('Erro ao atualizar ordem!');
-    }
+    const notifySuccess = () => toast.success('Ordem atualizada com sucesso!');
+    const notifyError = () => toast.error('Erro ao atualizar ordem!');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
 
         if (!selectedOrdem) return;
 
-        const { id, categoria, status, ...formData } = selectedOrdem;
+        const { id: idOrdem, fk_categoria_id, fk_status_id, ...formData } = selectedOrdem;
 
         try {
-            const selectedCategoria = categorias.find((cat) => cat.categoria === categoria);
-            const selectedStatus = statusList.find((st) => st.status === status);
+            const selectedCategoria = categorias.find((cat) => cat.categoria?.trim() === fk_categoria_id?.trim());
+            const selectedStatus = statusList.find((st) => st.status?.trim() === fk_status_id?.trim());                    
    
             if (!selectedCategoria || !selectedStatus) {
+                console.error('Categoria ou Status inválido:', selectedCategoria, selectedStatus);
                 throw new Error('Categoria ou Status inválido');
             }
 
@@ -105,9 +88,7 @@ export function EditOrder() {
                 fk_status_id: selectedStatus.id,
             };
             
-            await api.put(`/cliente/${id}/ordem/${id}`, updatedOrder);
-            console.log('Ordem atualizada:', updatedOrder, `/cliente/${id}/ordem/${id}`);
-
+            await api.put(`/cliente/${idCliente}/ordem/${idOrdem}`, updatedOrder);
             notifySuccess();
         } catch (error) {
             console.error('Erro ao atualizar a ordem:', error);
@@ -122,21 +103,12 @@ export function EditOrder() {
     return (
         <Dialog.Portal>
             <Dialog.Overlay className="bg-black/40 inset-0 fixed backdrop-blur-sm" />
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Bounce}
-            />
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} transition={Bounce} theme="light" />
 
-            <Dialog.Content className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25">
+            <Dialog.Content
+                className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25"
+                aria-describedby="edit-order-dialog"    
+            >
                 <Dialog.Title className="text-3xl text-white font-black inter">Editar Ordem</Dialog.Title>
 
                 <div className="w-full flex mt-5">
@@ -148,6 +120,7 @@ export function EditOrder() {
                 </div>
 
                 {selectedOrdem && (
+                    console.log(selectedOrdem),
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="info_produto">Informações do produto</label>
@@ -163,45 +136,25 @@ export function EditOrder() {
                             <label htmlFor="solucao">Diagnóstico e serviço a ser prestado</label>
                             <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={selectedOrdem.solucao} onChange={handleChange} />
                         </div>
-
-                        <div className="flex items-center gap-2">
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="categoria">Categoria</label>
-                                <select
-                                    name="categoria"
-                                    id="categoria"
-                                    required
-                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
-                                    value={selectedOrdem.categoria}
-                                    onChange={handleChange}
-                                >
-                                    <option disabled value="">Selecione a categoria</option>
-                                    {categorias.map((categoria) => (
-                                        <option key={categoria.id} value={categoria.categoria}>
-                                            {categoria.categoria}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="status">Status</label>
-                                <select
-                                    name="status"
-                                    id="status"
-                                    required
-                                    className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
-                                    value={selectedOrdem.status}
-                                    onChange={handleChange}
-                                >
-                                    <option disabled value="">Selecione o status</option>
-                                    {statusList.map((st) => (
+                        
+                        <div className="flex flex-col w-full">
+                            <label htmlFor="status">Status</label>
+                            <select
+                                name="status"
+                                id="status"
+                                required
+                                className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
+                                value={selectedOrdem.fk_status_id}
+                                onChange={handleChange}
+                            >
+                                {statusList
+                                    .filter((st) => st.status !== selectedOrdem?.fk_status_id)
+                                    .map((st) => (
                                         <option key={st.id} value={st.status}>
                                             {st.status}
                                         </option>
                                     ))}
-                                </select>
-                            </div>
+                            </select>
                         </div>
 
                         <div className="flex flex-col gap-2">
@@ -210,9 +163,7 @@ export function EditOrder() {
                         </div>
 
                         <footer className="mt-4 flex items-center justify-end gap-4">
-                            <button type='submit'
-                                className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600 outline-none"
-                            >
+                            <button type='submit' className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600 outline-none">
                                 <Plus size={20} className='mr-1' />
                                 Atualizar
                             </button>
