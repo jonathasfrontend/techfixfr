@@ -2,7 +2,6 @@ import { User, WhatsappLogo } from "@phosphor-icons/react";
 import { Link } from 'react-router-dom';
 import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import { useStatus } from '../hooks/useStatus';
-import React from "react";
 
 interface ClienteData {
   id: string;
