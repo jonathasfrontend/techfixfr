@@ -1,4 +1,4 @@
-import { Plus } from '@phosphor-icons/react';
+import { CurrencyDollar, Plus } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
@@ -224,10 +224,15 @@ export function AddNew() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="orcamento" >Orçamento</label>
-              <Input name="orcamento" id="orcamento" required placeholder="R$" value={formData.orcamento} onChange={handleChange} />
+              <label htmlFor="orcamento">Orçamento</label>
+              <div className='bg-[#00140D] flex items-center overflow-hidden rounded-md'>
+                <div className='px-2'>
+                  <CurrencyDollar className='w-5 h-5 '/>
+                </div>
+                <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={formData.orcamento} onChange={handleChange} />
+              </div>
             </div>
-
+            
             <footer className="mt-4 flex items-center justify-end gap-4">
               <button type='submit' className="bg-green-500 px-5 h-10 rounded-md font-semiBold flex items-center hover:bg-green-600 outline-none">
                 <Plus size={20} className='mr-1' />

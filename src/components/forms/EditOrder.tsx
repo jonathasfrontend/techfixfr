@@ -18,7 +18,7 @@ interface Ordem {
     info_produto: string;
     defeito: string;
     solucao: string;
-    status: string;
+    fk_status_id: number;
     orcamento: string;
 }
 
@@ -31,11 +31,11 @@ export function EditOrder() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [ statusResponse, ordemResponse] = await Promise.all([
+                const [statusResponse, ordemResponse] = await Promise.all([
                     api.get('/status'),
                     api.get(`/produto/${idCliente}`)
                 ]);
-                    setStatusList(statusResponse.data);
+                setStatusList(statusResponse.data);
                 setOrdens(ordemResponse.data.ordens);
     
             } catch (error) {
@@ -45,11 +45,10 @@ export function EditOrder() {
         fetchData();
     }, [idCliente]);
     
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         if (selectedOrdem) {
             const { name, value } = e.target;
-            setSelectedOrdem((prev) => prev ? { ...prev, [name]: value } : null);
+            setSelectedOrdem((prev) => prev ? { ...prev, [name]: name === "fk_status_id" ? Number(value) : value } : null);
         }
     };
 
@@ -61,19 +60,19 @@ export function EditOrder() {
 
         if (!selectedOrdem) return;
 
-        const { id: idOrdem,  status, ...formData } = selectedOrdem;
+        const { id: idOrdem, fk_status_id, ...formData } = selectedOrdem;
 
         try {
-            const selectedStatus = statusList.find((st) => st.status?.trim() === status?.trim());                    
+            const selectedStatus = statusList.find((st) => st.id === fk_status_id);
    
             if (!selectedStatus) {
-                console.error('Categoria ou Status inválido:', selectedStatus);
-                throw new Error('Categoria ou Status inválido');
+                console.error('Status inválido:', fk_status_id);
+                throw new Error('Status inválido');
             }
 
             const updatedOrder = {
                 ...formData,
-                fk_status_id: selectedStatus.id,
+                fk_status_id,
             };
             
             await api.put(`/cliente/${idCliente}/ordem/${idOrdem}`, updatedOrder);
@@ -125,19 +124,18 @@ export function EditOrder() {
                             <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={selectedOrdem.solucao} onChange={handleChange} />
                         </div>
 
-
                         <div className="flex flex-col w-full">
-                            <label htmlFor="status">Status</label>
+                            <label htmlFor="fk_status_id">Status</label>
                             <select
-                                name="status"
-                                id="status"
+                                name="fk_status_id"
+                                id="fk_status_id"
                                 required
                                 className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
-                                value={selectedOrdem.status}
+                                value={selectedOrdem.fk_status_id}
                                 onChange={handleChange}
                             >
                                 {statusList.map((st) => (
-                                    <option key={st.id} value={st.status}>
+                                    <option key={st.id} value={st.id}>
                                         {st.status}
                                     </option>
                                 ))}
@@ -148,7 +146,7 @@ export function EditOrder() {
                             <label htmlFor="orcamento">Orçamento</label>
                             <div className='bg-[#00140D] flex items-center overflow-hidden rounded-md'>
                                 <div className='px-2'>
-                                    <CurrencyDollar className='w-6 h-6 '/>
+                                    <CurrencyDollar className='w-5 h-5 '/>
                                 </div>
                                 <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={selectedOrdem.orcamento} onChange={handleChange} />
                             </div>

@@ -1,4 +1,4 @@
-import { Plus, X } from '@phosphor-icons/react';
+import { CurrencyDollar, Plus, X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
@@ -187,7 +187,12 @@ export function NewOrder() {
 
                     <div className="flex flex-col gap-2">
                         <label htmlFor="orcamento">Orçamento</label>
-                        <Input name="orcamento" id="orcamento" required placeholder="R$" value={formData.orcamento} onChange={handleChange} />
+                        <div className='bg-[#00140D] flex items-center overflow-hidden rounded-md'>
+                            <div className='px-2'>
+                                <CurrencyDollar className='w-5 h-5 '/>
+                            </div>
+                            <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={formData.orcamento} onChange={handleChange} />
+                        </div>
                     </div>
 
                     <footer className="mt-4 flex items-center justify-end gap-4">
