@@ -10,7 +10,7 @@ O principal objetivo deste sistema é proporcionar um meio simples e eficiente p
 
 ## 3. Tecnologias Utilizadas
 
-O sistema foi desenvolvido utilizando tecnologias modernas para garantir a escalabilidade, performance e facilidade de manutenção:
+O sistema foi desenvolvido utilizando tecnologias modernas para garantir escalabilidade, performance e facilidade de manutenção:
 
 - **Front-end**: React.js com Vite.js e Tailwind CSS.
 - **Back-end**: Node.js com Express.
@@ -39,70 +39,8 @@ O sistema foi projetado com controle de acesso, onde diferentes usuários têm d
 
 ### 5.1. Front-end
 
-#### 5.1.2. Arquivo `App.tsx`
-
-O arquivo principal de roteamento da aplicação utiliza o `react-router-dom` para definir as rotas principais, incluindo a página de login, dashboard e a página de ordens de serviço para clientes específicos.
-
-```tsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; 
-import LoginPage from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import { AuthProvider } from "./contexts/AuthContext";
-import User from "./pages/User";
-
-function App() {
-  return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/produto/:cpf" element={<User />} />
-        </Routes>
-      </AuthProvider>
-    </Router>
-  );
-}
-
-export default App;
-```
-#### 5.1.3. Arquivo `Dashboard.tsx`
-
-```tsx
-import { useEffect, useState } from 'react';
-import { parseCookies } from "nookies";
-import { useNavigate } from 'react-router-dom';
-import { api } from '../services/api';
-
-export default function Dashboard() {
-  const navigate = useNavigate();
-  const [orders, setOrder] = useState<Order[]>([]);
-
-  useEffect(() => {
-    const { "nextauth.token": token } = parseCookies();
-    if (!token) {
-      navigate('/');
-    }
-  }, [navigate]);
-
-  useEffect(()=>{
-    async function getOders(){
-      const response = await api.get('/ultimas-ordens')
-      const reversedOrders = response.data;
-      setOrder(reversedOrders);
-    }
-    getOders();
-  }, []);
-
-  return (
-    <div>
-      {/* Renderização da lista de ordens */}
-    </div>
-  );
-}
-```
-
 #### 5.1.1. Arquitetura de Pastas
+```plaintext
 /src
   /controllers
     AuthController.js
@@ -117,52 +55,129 @@ export default function Dashboard() {
   /config
     database.js
   server.js
+```
+#### 5.1.2. Arquivo App.tsx
+```tsx
+  import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; 
+  import LoginPage from './pages/Login';
+  import Dashboard from './pages/Dashboard';
+  import { AuthProvider } from "./contexts/AuthContext";
+  import User from "./pages/User";
+
+  function App() {
+    return (
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/produto/:cpf" element={<User />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    );
+  }
+
+  export default App;
+
+```
+
+#### 5.1.3. Arquivo Dashboard.tsx
+```tsx
+  import { useEffect, useState } from 'react';
+  import { parseCookies } from "nookies";
+  import { useNavigate } from 'react-router-dom';
+  import { api } from '../services/api';
+
+  export default function Dashboard() {
+    const navigate = useNavigate();
+    const [orders, setOrder] = useState<Order[]>([]);
+
+    useEffect(() => {
+      const { "nextauth.token": token } = parseCookies();
+      if (!token) {
+        navigate('/');
+      }
+    }, [navigate]);
+
+    useEffect(()=>{
+      async function getOders(){
+        const response = await api.get('/ultimas-ordens')
+        const reversedOrders = response.data;
+        setOrder(reversedOrders);
+      }
+      getOders();
+    }, []);
+
+    return (
+      <div>
+        {/* Renderização da lista de ordens */}
+      </div>
+    );
+  }
+
+```
 
 ### 5.2. Back-end
 
-#### 5.2.1. Arquivo `jsonwebtoken`
-
+#### 5.2.1. Autenticação com JSON Web Token (jsonwebtoken)
+Arquivo AuthController.js para autenticação de usuários:
 ```js
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+  const jwt = require("jsonwebtoken");
+  const bcrypt = require("bcryptjs");
 
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ where: { email } });
-  
-  if (!user || !bcrypt.compareSync(password, user.password)) {
-    return res.status(401).json({ error: "Invalid email or password" });
+  exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
+    
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  };
+
+```
+#### 5.2.2. Rota /produto/:cpf para busca de ordens por cliente
+```js
+  exports.getOrdersByCpf = async (req, res) => {
+    const { cpf } = req.params;
+    const cliente = await Cliente.findOne({ where: { cpf } });
+    if (!cliente) return res.status(404).json({ error: "Client not found" });
+
+    const ordens = await Ordem.findAll({ where: { fk_cliente_cpf: cpf } });
+    res.json({ cliente, ordens });
   }
-
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  res.json({ token });
-};
 ```
 
-#### 5.2.1. Rota `/produto/:cpf`
-```js
-exports.getOrdersByCpf = async (req, res) => {
-  const { cpf } = req.params;
-  const cliente = await Cliente.findOne({ where: { cpf } });
-  if (!cliente) return res.status(404).json({ error: "Client not found" });
-
-  const ordens = await Ordem.findAll({ where: { fk_cliente_cpf: cpf } });
-  res.json({ cliente, ordens });
-}
+## 6. Configuração e Execução
+### 6.1. Instalação de Dependências
+No diretório do projeto, instale as dependências com o seguinte comando:
+```bash
+npm install
 ```
-`npm install`
-`npm run dev`
-ou
-`npm run start`
 
-### Explicação dos itens:
-- **Introdução** e **Objetivo** abordam o contexto do sistema e o propósito da aplicação.
-- **Tecnologias Utilizadas** descreve as ferramentas escolhidas.
-- **Funcionalidades** lista as principais operações que o sistema oferece.
-- **Estrutura do Projeto** explica a arquitetura de pastas e os arquivos principais no front-end e back-end.
-- **Roteamento e Autenticação** descrevem como funciona o roteamento com React Router e a autenticação com JWT.
-- **Configuração e Execução** orienta como configurar o ambiente e rodar o sistema localmente.
+### 6.2. Executando o Projeto em Desenvolvimento
+Para iniciar o projeto em modo de desenvolvimento, utilize:
+```bash
+npm run dev
+```
 
-Se você precisar de ajustes específicos em qualquer parte da documentação ou mais detalhes técnicos, é só me avisar!
+### 6.3. Executando o Projeto em Produção
+Para iniciar o projeto em modo de produção, utilize:
+```bash
+npm run dev
+```
+## 7. Estrutura e Organização da Documentação
+* Introdução e Objetivo abordam o contexto do sistema e o propósito da aplicação.
+* Tecnologias Utilizadas descreve as ferramentas escolhidas para o desenvolvimento.
+* Funcionalidades Principais lista as principais operações que o sistema oferece.
+* Estrutura do Projeto explica a arquitetura de pastas e os arquivos principais no front-end e back-end.
+* Roteamento e Autenticação descrevem como funciona o roteamento com React Router e a autenticação com JWT.
+* Configuração e Execução orienta como configurar o ambiente e rodar o sistema localmente.
+* Para mais detalhes técnicos ou para sugestões de melhorias, sinta-se à vontade para contribuir!
 
 
+Para mais detalhes técnicos ou para sugestões de melhorias, sinta-se à vontade para contribuir!
+> Esta estrutura fornece uma documentação detalhada do sistema e descreve o funcionamento das principais partes do código. Se precisar de mais alguma alteração, posso ajudar com ajustes adicionais!
