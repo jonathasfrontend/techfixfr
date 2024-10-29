@@ -48,8 +48,6 @@ export default function User() {
         setCliente(response.data.cliente);
         const reversedOrders = [...response.data.ordens].reverse();
         setOrdens(reversedOrders);
-        console.log(response.data);
-
       })
       .catch(error => {
         console.error("Error fetching cliente details:", error);

@@ -3,7 +3,7 @@ import { useCategoria } from '../hooks/useCategoria';
 import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
 import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X } from '@phosphor-icons/react';
-import dayjs from 'dayjs'; // Biblioteca para manipulação de datas
+import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
 interface ClienteData {
@@ -15,7 +15,7 @@ interface ClienteData {
 
 interface OrdemData {
   id: string;
-  data: string; // Data de criação da ordem
+  data: string;
   info_produto: string;
   defeito: string;
   solucao: string;

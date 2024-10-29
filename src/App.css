@@ -13,6 +13,7 @@
 
 .bg{
     background-image: url('./assets/bg.png');
+    /* background-color: #121214; */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -32,7 +33,7 @@
 }
 
 input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 20px #00582f inset !important;
+    -webkit-box-shadow: 0 0 0px 26px #00582f inset !important;
     -webkit-text-fill-color: white !important;
 } 
 

@@ -1,5 +1,5 @@
-import { Plus, X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { CurrencyDollar, Plus, X } from '@phosphor-icons/react';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { api } from "../../services/api";
@@ -7,11 +7,6 @@ import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
-
-interface Categoria {
-    id: number;
-    categoria: string;
-}
 
 interface Status {
     id: number;
@@ -23,14 +18,12 @@ interface Ordem {
     info_produto: string;
     defeito: string;
     solucao: string;
-    fk_categoria_id: string;
-    fk_status_id: string;
+    status: string;
     orcamento: string;
 }
 
 export function EditOrder() {
     const { id: idCliente } = useParams();
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [statusList, setStatusList] = useState<Status[]>([]);
     const [ordens, setOrdens] = useState<Ordem[]>([]);
     const [selectedOrdem, setSelectedOrdem] = useState<Ordem | null>(null);
@@ -38,16 +31,13 @@ export function EditOrder() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [categoriaResponse, statusResponse, ordemResponse] = await Promise.all([
-                    api.get('/categoria'),
+                const [ statusResponse, ordemResponse] = await Promise.all([
                     api.get('/status'),
                     api.get(`/produto/${idCliente}`)
                 ]);
-    
-                setCategorias(categoriaResponse.data);
-                setStatusList(statusResponse.data);
+                    setStatusList(statusResponse.data);
                 setOrdens(ordemResponse.data.ordens);
-
+    
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
             }
@@ -71,24 +61,23 @@ export function EditOrder() {
 
         if (!selectedOrdem) return;
 
-        const { id: idOrdem, fk_categoria_id, fk_status_id, ...formData } = selectedOrdem;
+        const { id: idOrdem,  status, ...formData } = selectedOrdem;
 
         try {
-            const selectedCategoria = categorias.find((cat) => cat.categoria?.trim() === fk_categoria_id?.trim());
-            const selectedStatus = statusList.find((st) => st.status?.trim() === fk_status_id?.trim());                    
+            const selectedStatus = statusList.find((st) => st.status?.trim() === status?.trim());                    
    
-            if (!selectedCategoria || !selectedStatus) {
-                console.error('Categoria ou Status inválido:', selectedCategoria, selectedStatus);
+            if (!selectedStatus) {
+                console.error('Categoria ou Status inválido:', selectedStatus);
                 throw new Error('Categoria ou Status inválido');
             }
 
             const updatedOrder = {
                 ...formData,
-                fk_categoria_id: selectedCategoria.id,
                 fk_status_id: selectedStatus.id,
             };
             
             await api.put(`/cliente/${idCliente}/ordem/${idOrdem}`, updatedOrder);
+            
             notifySuccess();
         } catch (error) {
             console.error('Erro ao atualizar a ordem:', error);
@@ -120,7 +109,6 @@ export function EditOrder() {
                 </div>
 
                 {selectedOrdem && (
-                    console.log(selectedOrdem),
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-auto mt-5">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="info_produto">Informações do produto</label>
@@ -136,7 +124,8 @@ export function EditOrder() {
                             <label htmlFor="solucao">Diagnóstico e serviço a ser prestado</label>
                             <Textarea name="solucao" id="solucao" required placeholder="Diagnóstico e serviço a ser prestado" value={selectedOrdem.solucao} onChange={handleChange} />
                         </div>
-                        
+
+
                         <div className="flex flex-col w-full">
                             <label htmlFor="status">Status</label>
                             <select
@@ -144,22 +133,25 @@ export function EditOrder() {
                                 id="status"
                                 required
                                 className="bg-[#00140D] text-sm py-4 px-5 w-full rounded-md outline-none"
-                                value={selectedOrdem.fk_status_id}
+                                value={selectedOrdem.status}
                                 onChange={handleChange}
                             >
-                                {statusList
-                                    .filter((st) => st.status !== selectedOrdem?.fk_status_id)
-                                    .map((st) => (
-                                        <option key={st.id} value={st.status}>
-                                            {st.status}
-                                        </option>
-                                    ))}
+                                {statusList.map((st) => (
+                                    <option key={st.id} value={st.status}>
+                                        {st.status}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label htmlFor="orcamento">Orçamento</label>
-                            <Input name="orcamento" id="orcamento" required placeholder="R$" value={selectedOrdem.orcamento} onChange={handleChange} />
+                            <div className='bg-[#00140D] flex items-center overflow-hidden rounded-md'>
+                                <div className='px-2'>
+                                    <CurrencyDollar className='w-6 h-6 '/>
+                                </div>
+                                <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={selectedOrdem.orcamento} onChange={handleChange} />
+                            </div>
                         </div>
 
                         <footer className="mt-4 flex items-center justify-end gap-4">

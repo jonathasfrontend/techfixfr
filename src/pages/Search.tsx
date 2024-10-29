@@ -71,7 +71,7 @@ export default function Search() {
         </div>
       </header>
 
-      <div className='relative mt-3 w-full overflow-auto px-16'>
+      <div className='relative mt-3 w-full overflow-auto px-16 flex flex-col gap-3'>
         <h1 className='font-medium mb-3 text-1xl text-[#b6b6b6]'>Resultados da Pesquisa</h1>
         
         {results.map((result: any) => (
