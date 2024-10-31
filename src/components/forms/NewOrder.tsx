@@ -7,6 +7,7 @@ import { api } from "../../services/api";
 import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
+import { formatCurrency } from '../../services/formatters';
 
 interface Categoria {
     id: number;
@@ -68,7 +69,11 @@ export function NewOrder() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+
+        let formattedValue = value;
+        if (name === 'orcamento') formattedValue = formatCurrency(value);
+
+        setFormData((prev) => ({ ...prev, [name]: formattedValue }));
     };
 
     function notify() {
@@ -87,6 +92,7 @@ export function NewOrder() {
 
             const newOrder = {
                 ...formData,
+                orcamento: formData.orcamento.replace(/[^\d]/g, ''),
                 fk_categoria_id: selectedCategoria.id,
                 fk_status_id: selectedStatus.id
             };
@@ -191,7 +197,15 @@ export function NewOrder() {
                             <div className='px-2'>
                                 <CurrencyDollar className='w-5 h-5 '/>
                             </div>
-                            <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={formData.orcamento} onChange={handleChange} />
+                            <input
+                            className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]'
+                            name="orcamento"
+                            id="orcamento"
+                            required
+                            placeholder="R$ 0,00"
+                            value={formData.orcamento}
+                            onChange={handleChange}
+                            />
                         </div>
                     </div>
 

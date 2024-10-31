@@ -6,6 +6,7 @@ import { api } from "../../services/api";
 import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
+import { formatCurrency, formatTelefone } from '../../services/formatters'
 
 interface Categoria {
   id: number;
@@ -73,12 +74,14 @@ export function AddNew() {
       .slice(0, 15);
   };
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     let formattedValue = value;
     if (name === 'cpf') formattedValue = formatCPF(value);
     if (name === 'telefone') formattedValue = formatPhone(value);
+    if (name === 'orcamento') formattedValue = formatCurrency(value);
 
     setFormData((prev) => ({ ...prev, [name]: formattedValue }));
   };
@@ -100,8 +103,9 @@ export function AddNew() {
       // Remover formatação antes de enviar
       const unformattedData = {
         ...formData,
-        cpf: formData.cpf.replace(/\D/g, ''), // Remove todos os caracteres não numéricos
-        telefone: formData.telefone.replace(/\D/g, ''), // Remove todos os caracteres não numéricos
+        cpf: formData.cpf.replace(/\D/g, ''),
+        telefone: formData.telefone.replace(/\D/g, ''),
+        orcamento: formData.orcamento.replace(/[^\d]/g, ''),
         fk_categoria_id: selectedCategoria.id,
         fk_status_id: selectedStatus.id
       };
@@ -229,7 +233,15 @@ export function AddNew() {
                 <div className='px-2'>
                   <CurrencyDollar className='w-5 h-5 '/>
                 </div>
-                <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={formData.orcamento} onChange={handleChange} />
+                <input
+                  className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]'
+                  name="orcamento"
+                  id="orcamento"
+                  required
+                  placeholder="R$ 0,00"
+                  value={formData.orcamento}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             

@@ -7,6 +7,7 @@ import { Input } from './components/Input';
 import { Textarea } from './components/Textarea';
 import 'react-toastify/dist/ReactToastify.css';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { formatCurrency } from '../../services/formatters'
 
 interface Status {
     id: number;
@@ -44,11 +45,17 @@ export function EditOrder() {
         };
         fetchData();
     }, [idCliente]);
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         if (selectedOrdem) {
             const { name, value } = e.target;
-            setSelectedOrdem((prev) => prev ? { ...prev, [name]: name === "fk_status_id" ? Number(value) : value } : null);
+
+            const formattedValue = 
+                name === "orcamento" ? formatCurrency(value) : value;
+
+            setSelectedOrdem((prev) => 
+                prev ? { ...prev, [name]: name === "fk_status_id" ? Number(value) : formattedValue } : null
+            );
         }
     };
 
@@ -73,6 +80,7 @@ export function EditOrder() {
             const updatedOrder = {
                 ...formData,
                 fk_status_id,
+                orcamento: selectedOrdem.orcamento.replace(/[^\d]/g, ""),
             };
             
             await api.put(`/cliente/${idCliente}/ordem/${idOrdem}`, updatedOrder);
@@ -85,7 +93,10 @@ export function EditOrder() {
     };
 
     const handleEdit = (ordem: Ordem) => {
-        setSelectedOrdem(ordem);
+        setSelectedOrdem({
+            ...ordem,
+            orcamento: formatCurrency(ordem.orcamento), // Formata o orçamento ao carregar os dados
+        });
     };
 
     return (
@@ -148,7 +159,15 @@ export function EditOrder() {
                                 <div className='px-2'>
                                     <CurrencyDollar className='w-5 h-5 '/>
                                 </div>
-                                <input className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]' name="orcamento" id="orcamento" required placeholder="R$ 0,00" value={selectedOrdem.orcamento} onChange={handleChange} />
+                                    <input
+                                    className='bg-[#00140D] text-sm w-full py-4 pr-5 outline-none placeholder:text-[#71717A]'
+                                    name="orcamento"
+                                    id="orcamento"
+                                    required
+                                    placeholder="R$ 0,00"
+                                    value={selectedOrdem.orcamento}
+                                    onChange={handleChange}
+                                />
                             </div>
                         </div>
 

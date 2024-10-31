@@ -1,10 +1,10 @@
 import { useStatus } from '../hooks/useStatus';
 import { useCategoria } from '../hooks/useCategoria';
-import { formatCpf, formatTelefone, formatDate } from '../services/formatters';
+import { formatCpf, formatTelefone, formatDate, formatCurrency } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
-import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X } from '@phosphor-icons/react';
+import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X, Download } from '@phosphor-icons/react';
 import dayjs from 'dayjs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface ClienteData {
   cpf: string;
@@ -37,6 +37,30 @@ export function CardUserAccordion(props: CardProps) {
   const currentDate = dayjs();
   const isWithinWarranty = currentDate.diff(orderDate, 'month') < 3;
 
+  const navigate = useNavigate();
+
+  const downloadImage = async () => {
+    const orderData = {
+      id: props.id,
+      data: props.data,
+      info_produto: props.info_produto,
+      defeito: props.defeito,
+      solucao: props.solucao,
+      garantia: props.garantia,
+      fk_cliente_cpf: props.fk_cliente_cpf,
+      fk_status_id: props.fk_status_id,
+      fk_categoria_id: props.fk_categoria_id,
+      orcamento: props.orcamento,
+      cpf: props.cpf,
+      nome: props.nome,
+      endereco: props.endereco,
+      telefone: props.telefone,
+    };
+  
+    navigate('/order-image', { state: { orderData } });
+
+  }
+
   return (
     <Accordion.Root
       className="w-full mb-5"
@@ -45,10 +69,9 @@ export function CardUserAccordion(props: CardProps) {
       collapsible
     >
       <Accordion.Item className={`w-full bg-[#00000062] p-5 rounded-md border-[2px] ${statusColor} border-solid`} value="item-1">
-
         <Accordion.Header>
           <Accordion.Trigger className='AccordionTrigger text-xl text-white w-full flex items-center justify-between'>
-            <h1 className='font-bold text-base'>Codigo da ordem <span className='ml-2 text-neutral-500'>{props.id}</span> </h1>
+            <h1 className='font-bold text-base'>Código da ordem <span className='ml-2 text-neutral-500'>{props.id}</span> </h1>
             <div className='flex items-center'>
               <h1 className={`text-base font-semibold ${statusColor} ${statusBgColor}`}>{statusText}</h1>
               <CaretDown size={24} className="ml-2 transition-transform duration-200 accordion-icon" />
@@ -56,9 +79,8 @@ export function CardUserAccordion(props: CardProps) {
           </Accordion.Trigger>
         </Accordion.Header>
 
-        <Accordion.Content className='mt-5'>
+        <Accordion.Content id={`order-${props.id}`} className='mt-5'>
           <p className='text-xs font-medium my-2 text-white'>CPF: <span className='ml-2 text-neutral-500'>{formatCpf(props.cpf)}</span></p>
-
           <div className='p-1 rounded-md bg-gradient-to-t from-[#128c7e] to-[#25d366] w-[160px]'>
             <Link to={`https://api.whatsapp.com/send?phone=${props.telefone}`} className='w-8 h-8'>
               <div className='w-full h-full flex items-center justify-center'>
@@ -85,7 +107,7 @@ export function CardUserAccordion(props: CardProps) {
 
           <div className='w-full mt-5 flex items-center justify-between'>
             <div className='flex items-center mt-6'>
-              <h1 className='text-white text-sm font-semibold'>Orçamento: <span className='font-bold'>R${props.orcamento}</span></h1>
+              <h1 className='text-white text-sm font-semibold'>Orçamento: <span className='font-bold'>{formatCurrency(props.orcamento)}</span></h1>
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <Tag className='w-4 h-4 mr-1'/>{categoriaText}
               </p>
@@ -98,9 +120,11 @@ export function CardUserAccordion(props: CardProps) {
               {isWithinWarranty ? <Check className='ml-2 w-4 h-4' /> : <X className='w-5 h-5 ml-2'/>}
             </div>
           </div>
+          <button onClick={downloadImage} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md flex items-center">
+            <Download className="mr-2" /> Baixar Ordem como Imagem
+          </button>
         </Accordion.Content>
       </Accordion.Item>
-
     </Accordion.Root>
   )
 }
