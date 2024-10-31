@@ -50,6 +50,7 @@ export default function Login() {
       <header className="absolute top-0 left-0 w-full flex items-center justify-between px-16 py-3">
         <div className='w-1/2 flex items-center'>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
+          <h1 className='text-2xl text-white font-bold'>Tech Fix FR</h1>
         </div>
       </header>
 

@@ -6,7 +6,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import User from "./pages/User";
 import { OrderImage } from "./components/OrderImage";
 
-// Exemplo de dados de orderData
 const orderData = {
   id: "123",
   data: "2024-10-31",
