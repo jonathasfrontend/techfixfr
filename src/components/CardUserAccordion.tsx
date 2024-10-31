@@ -2,7 +2,7 @@ import { useStatus } from '../hooks/useStatus';
 import { useCategoria } from '../hooks/useCategoria';
 import { formatCpf, formatTelefone, formatDate, formatCurrency } from '../services/formatters';
 import * as Accordion from '@radix-ui/react-accordion';
-import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X, Download } from '@phosphor-icons/react';
+import { CalendarBlank, CaretDown, Check, Tag, WhatsappLogo, X, DownloadSimple } from '@phosphor-icons/react';
 import dayjs from 'dayjs';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -82,7 +82,7 @@ export function CardUserAccordion(props: CardProps) {
         <Accordion.Content id={`order-${props.id}`} className='mt-5'>
           <p className='text-xs font-medium my-2 text-white'>CPF: <span className='ml-2 text-neutral-500'>{formatCpf(props.cpf)}</span></p>
           <div className='p-1 rounded-md bg-gradient-to-t from-[#128c7e] to-[#25d366] w-[160px]'>
-            <Link to={`https://api.whatsapp.com/send?phone=${props.telefone}`} className='w-8 h-8'>
+            <Link to={`https://api.whatsapp.com/send?phone=${props.telefone}`}>
               <div className='w-full h-full flex items-center justify-center'>
                 <WhatsappLogo className='text-white h-6 w-6 mr-2' />
                 <p className='flex items-center text-sm font-medium text-white'>{formatTelefone(props.telefone)}</p>
@@ -105,8 +105,8 @@ export function CardUserAccordion(props: CardProps) {
             <p className='font-medium text-xs ml-5 mt-2 text-neutral-400'>{props.solucao}</p>
           </div>
 
-          <div className='w-full mt-5 flex items-center justify-between'>
-            <div className='flex items-center mt-6'>
+          <div className='w-full  flex items-center justify-between'>
+            <div className='flex items-center '>
               <h1 className='text-white text-sm font-semibold'>Orçamento: <span className='font-bold'>{formatCurrency(props.orcamento)}</span></h1>
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <Tag className='w-4 h-4 mr-1'/>{categoriaText}
@@ -114,15 +114,15 @@ export function CardUserAccordion(props: CardProps) {
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <CalendarBlank className='w-4 h-4 mr-1' />{formatDate(props.data)}
               </p>
+              <div className={`flex items-center ml-2 text-xs font-bold ${isWithinWarranty ? 'text-[#2FB600]' : 'text-red-600'}`}>
+                {isWithinWarranty ? 'Na Garantia  ' : 'Fora da Garantia'}
+                {isWithinWarranty ? <Check className='text-lg ml-1' /> : <X className='text-lg ml-1'/>}
+              </div>
             </div>
-            <div className={`flex items-center px-5 py-2 rounded-full text-white text-sm font-semibold ${isWithinWarranty ? 'bg-[#2FB600]' : 'bg-red-600'}`}>
-              {isWithinWarranty ? 'Na Garantia  ' : 'Fora da Garantia'}
-              {isWithinWarranty ? <Check className='ml-2 w-4 h-4' /> : <X className='w-5 h-5 ml-2'/>}
-            </div>
-          </div>
-          <button onClick={downloadImage} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md flex items-center">
-            <Download className="mr-2" /> Baixar Ordem como Imagem
+          <button onClick={downloadImage} className=" bg-blue-500 text-white p-2 rounded-md flex items-center">
+            <DownloadSimple className="w-5 h-5" />
           </button>
+          </div>
         </Accordion.Content>
       </Accordion.Item>
     </Accordion.Root>
