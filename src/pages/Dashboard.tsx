@@ -111,8 +111,8 @@ export default function Dashboard() {
               nome={order.cliente.nome}
               telefone={order.cliente.telefone}
               cpf={order.cliente.cpf}
-              fk_status_id={order.ordens[0]?.fk_status_id}  // Acessando o primeiro item de 'ordens'
-              data={order.ordens[0]?.data}                  // Acessando o primeiro item de 'ordens'
+              fk_status_id={order.ordens[0]?.fk_status_id}
+              data={order.ordens[0]?.data}
             />
           ))
         ) : (

@@ -55,7 +55,7 @@ export default function Login() {
       </header>
 
       <form className="w-[350px] gap-3" onSubmit={handleSubmit(handleSignIn)}>
-        <h2 className="font-bold text-gray-400 text-2xl">
+        <h2 className="font-bold text-green-200 text-2xl">
           Acesse sua conta
         </h2>
         <div>

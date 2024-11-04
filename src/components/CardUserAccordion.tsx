@@ -119,7 +119,7 @@ export function CardUserAccordion(props: CardProps) {
                 {isWithinWarranty ? <Check className='text-lg ml-1' /> : <X className='text-lg ml-1'/>}
               </div>
             </div>
-          <button onClick={downloadImage} className=" bg-blue-500 text-white p-2 rounded-md flex items-center">
+          <button onClick={downloadImage} className=" bg-blue-500 text-white p-2 rounded-md flex items-center hover:bg-blue-600">
             <DownloadSimple className="w-5 h-5" />
           </button>
           </div>

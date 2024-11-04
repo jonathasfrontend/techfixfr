@@ -32,26 +32,23 @@ interface OrderImageProps {
 
 export function OrderImage({ orderData }: OrderImageProps) {
   const { state } = useLocation();
-  const orderDataFromState = state?.orderData; // Renomeie a variável aqui
+  const orderDataFromState = state?.orderData;
   
-  // Use a orderData passada como prop, ou a do estado se não estiver definida
   const finalOrderData = orderDataFromState || orderData;
 
   if (!finalOrderData) {
-    return <p>Nenhuma ordem encontrada.</p>; // Exibir mensagem de erro se não houver dados
+    return <p>Nenhuma ordem encontrada.</p>;
   }
 
-  const captureImage = async () => {
-    console.log('Botão clicado!');
-    console.log('finalOrderData:', finalOrderData); 
-    
+  const captureImage = async () => {    
     setTimeout(async () => {
       const content = document.getElementById(`order-${finalOrderData.id}`);
       if (content) {
         const canvas = await html2canvas(content, {
           backgroundColor: '#ffffff',
-          width: 760, // Largura específica
-          height: 480, // Altura específica
+          width: 730,
+          height: 700,
+          scale: 2,
         });
         const imgData = canvas.toDataURL('image/png');
         const link = document.createElement('a');
@@ -59,16 +56,16 @@ export function OrderImage({ orderData }: OrderImageProps) {
         link.download = `Ordem-${finalOrderData.id}.png`;
         link.click();
       }
-    }, 500); // Tempo em milissegundos, ajuste se necessário
+    }, 500);
   };
   
 
   return (
-    <div id={`order-${finalOrderData.id}`} className="relative min-h-screen w-[760px] px-5 bg-[#ffffff] border-r-[1px] border-[#ccc]">
+    <div id={`order-${finalOrderData.id}`} className="min-h-screen w-[730px] px-5 bg-[#ffffff] border-r-[1px] border-[#ccc]">
 
       <header className='w-full flex-col flex items-center'>
-          <h1 className='text-2xl text-[#121214] font-bold uppercase'>Registro de Ordem de Serviço</h1>
-        <div className='w-full flex items-center justify-between mt-5'>
+        <h1 className='text-2xl text-[#121214] font-bold uppercase my-2'>Registro de Ordem de Serviço</h1>
+        <div className='w-full flex items-center justify-between'>
           <div className='flex items-center'>
             <img src={logo} className='w-14 h-14 object-cover rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
             <div>
@@ -83,9 +80,9 @@ export function OrderImage({ orderData }: OrderImageProps) {
         </div>        
       </header>
 
-      <div className='w-full mt-4 flex items-center flex-col text-[#121214]'>
-        <h1 className='text-base text-[#121214] font-bold uppercase'>Dados do cliente</h1>
-        <div className='w-full flex items-center justify-between px-20'>
+      <div className='w-full my-5 flex items-center flex-col text-[#121214]'>
+        <h1 className='text-base text-[#121214] font-bold uppercase mb-2'>Dados do cliente</h1>
+        <div className='w-full flex items-center justify-between px-20 py-5 border-solid border-[1px] border-[#12121453]'>
           <div>
             <p className='text-base font-extrabold'>Nome: <span className='text-base font-normal'>{finalOrderData.nome}</span></p>
             <p className='text-base font-extrabold'>Endereço: <span className='text-base font-normal'>{finalOrderData.endereco}</span></p>
@@ -97,30 +94,30 @@ export function OrderImage({ orderData }: OrderImageProps) {
         </div>
       </div>
 
-      <div className='w-full mt-4 flex items-center flex-col text-[#121214]'>
-        <h1 className='text-base text-[#121214] font-bold uppercase'>Informações do produto</h1>
-        <div className='w-full flex items-center justify-between px-20'>
+      <div className='w-full flex items-center flex-col text-[#121214]'>
+        <h1 className='text-base text-[#121214] font-bold uppercase mb-2'>Informações do produto</h1>
+        <div className='w-full flex items-center justify-between px-20 py-5 border-solid border-[1px] border-[#12121453]'>
           <p className='text-base font-extrabold'>Modelo: <span className='text-base font-normal'>{finalOrderData.info_produto}</span></p>
         </div>
       </div>
 
-      <div className='w-full mt-4 flex items-center flex-col text-[#121214]'>
-        <h1 className='text-base text-[#121214] font-bold uppercase'>Relato do Cliente</h1>
-        <div className='w-full flex items-center justify-between px-20'>
+      <div className='w-full flex items-center flex-col text-[#121214]'>
+        <h1 className='text-base text-[#121214] font-bold uppercase mb-2'>Relato do Cliente</h1>
+        <div className='w-full flex items-center justify-between px-20 py-5 border-solid border-[1px] border-[#12121453]'>
           <p className='text-base font-extrabold'><span className='text-base font-normal'>{finalOrderData.defeito}</span></p>
         </div>
       </div>
 
-      <div className='w-full mt-4 flex items-center flex-col text-[#121214]'>
-        <h1 className='text-base text-[#121214] font-bold uppercase'>Diagnóstico e Solução</h1>
-        <div className='w-full flex items-center justify-between px-20'>
+      <div className='w-full flex items-center flex-col text-[#121214]'>
+        <h1 className='text-base text-[#121214] font-bold uppercase mb-2'>Diagnóstico e Solução</h1>
+        <div className='w-full flex items-center justify-between px-20 py-5 border-solid border-[1px] border-[#12121453]'>
           <p className='text-base font-extrabold'><span className='text-base font-normal'>{finalOrderData.solucao}</span></p>
         </div>
       </div>
 
-      <div className='w-full mt-4 flex items-center flex-col text-[#121214]'>
-        <h1 className='text-base text-[#121214] font-bold uppercase'>Orçamento</h1>
-        <div className='w-full flex items-center justify-between px-20'>
+      <div className='w-full flex items-center flex-col text-[#121214]'>
+        <h1 className='text-base text-[#121214] font-bold uppercase mb-2'>Orçamento</h1>
+        <div className='w-full flex items-center justify-between px-20 py-5 border-solid border-[1px] border-[#12121453]'>
           <div className='w-full flex items-center justify-between'>
             <p className='text-base font-extrabold'>Total:</p>
             <span className='text-base font-normal'>{formatCurrency(finalOrderData.orcamento)}</span>
