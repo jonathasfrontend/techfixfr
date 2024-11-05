@@ -2,6 +2,9 @@ import { useLocation } from 'react-router-dom';
 import { formatTelefone, formatDate, formatCurrency } from '../services/formatters';
 import html2canvas from 'html2canvas';
 import logo from '../assets/logo.jpg';
+import { useEffect } from 'react';
+import { parseCookies } from 'nookies';
+import { useNavigate } from 'react-router-dom';
 
 const formatCpf = (value: string) => {
     return value
@@ -31,6 +34,16 @@ interface OrderImageProps {
 }
 
 export function OrderImage({ orderData }: OrderImageProps) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const { "nextauth.token": token } = parseCookies();
+    if (!token) {
+      navigate('/');
+    } else {
+      return;
+    }
+  }, [navigate]);
+
   const { state } = useLocation();
   const orderDataFromState = state?.orderData;
   
