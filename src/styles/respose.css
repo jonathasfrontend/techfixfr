@@ -1,0 +1,89 @@
+@media ( max-width: 500px ){
+    .main_login{
+        width: 100%;
+        padding: 0 5%;
+    }
+    .header_login{
+        width: 100%;
+        padding: 20px 5%;
+    }
+    .content_header_login{
+        width: 100%;
+    }
+    .form_login{
+        width: 100%;
+    }
+    .header_user_content_text_user{
+        font-size: 20px;
+    }
+}
+@media ( max-width: 790px ){
+    .main_dashboard{
+        width: 100%;
+    }
+    .header_dashboard{
+        width: 100%;
+        padding: 20px 5%;
+    }
+    .form_search_dashboard{
+        display: none;
+    }
+}
+
+@media ( max-width: 1280px ){
+    .card_items_dashboard{
+        grid-template-columns: repeat(3, 1fr);
+        padding: 0 5%;
+    }
+}
+@media ( max-width: 970px ){
+    .card_items_dashboard{
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 5%;
+    }
+}
+@media ( max-width: 790px ){
+    .card_items_dashboard{
+        grid-template-columns: repeat(1, 1fr);
+        padding: 0 5%;
+    }
+}
+
+@media ( max-width: 490px ){
+    .main_form_style{
+        width: 98%;
+        height: 95%;
+        padding: 20px 5%;
+    }
+}
+
+@media ( max-width: 810px ){
+    .header_user{
+        width: 100%;
+        padding: 20px 5%;
+    }
+    .content_acordeon_user{
+        padding: 0 5%;
+    }
+    .header_user_content{
+        width: 100%;
+    }
+}
+@media ( max-width: 930px ){
+    .AccordionTrigger h1{
+        font-size: 14px;
+    }
+}
+@media ( max-width: 840px ){
+    .content_card_user_accordion_text_code{
+        display: block;
+    }
+}
+@media ( max-width: 640px ){
+    .content_card_user_accordion_items_description{
+        display: block;
+    }
+    .content_card_user_accordion_items_description p{
+        margin: 10px 0 0 0;
+    }
+}

@@ -105,7 +105,7 @@ export function EditOrder() {
             <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} transition={Bounce} theme="light" />
 
             <Dialog.Content
-                className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25"
+                className="bg-[#152722] fixed px-8 py-5 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-md h-[90%] w-[480px] shadow-lg shadow-black/25 main_form_style"
                 aria-describedby="edit-order-dialog"    
             >
                 <Dialog.Title className="text-3xl text-white font-black inter">Editar Ordem</Dialog.Title>

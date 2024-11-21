@@ -68,10 +68,10 @@ export function CardUserAccordion(props: CardProps) {
       defaultValue={isClosed ? undefined : 'item-1'}
       collapsible
     >
-      <Accordion.Item className={`w-full bg-[#00000062] p-5 rounded-md border-[2px] ${statusColor} border-solid`} value="item-1">
+      <Accordion.Item className={`w-full bg-[#00000062] p-5 rounded-md border-[2px] ${statusColor} border-solid main_card_user_accordion`} value="item-1">
         <Accordion.Header>
-          <Accordion.Trigger className='AccordionTrigger text-xl text-white w-full flex items-center justify-between'>
-            <h1 className='font-bold text-base'>Código da ordem <span className='ml-2 text-neutral-500'>{props.id}</span> </h1>
+          <Accordion.Trigger className='AccordionTrigger text-white w-full flex items-center justify-between'>
+            <h1 className='font-bold text-base flex items-center content_card_user_accordion_text_code'>Código da ordem <p className='ml-2 text-neutral-500'>{props.id}</p> </h1>
             <div className='flex items-center'>
               <h1 className={`text-base font-semibold ${statusColor} ${statusBgColor}`}>{statusText}</h1>
               <CaretDown size={24} className="ml-2 transition-transform duration-200 accordion-icon" />
@@ -105,8 +105,8 @@ export function CardUserAccordion(props: CardProps) {
             <p className='font-medium text-xs ml-5 mt-2 text-neutral-400'>{props.solucao}</p>
           </div>
 
-          <div className='w-full  flex items-center justify-between'>
-            <div className='flex items-center '>
+          <div className='w-full flex items-center justify-between '>
+            <div className='flex items-center content_card_user_accordion_items_description'>
               <h1 className='text-white text-sm font-semibold'>Orçamento: <span className='font-bold'>{formatCurrency(props.orcamento)}</span></h1>
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <Tag className='w-4 h-4 mr-1'/>{categoriaText}
@@ -114,10 +114,10 @@ export function CardUserAccordion(props: CardProps) {
               <p className='flex items-center text-xs text-white font-medium ml-5'>
                 <CalendarBlank className='w-4 h-4 mr-1' />{formatDate(props.data)}
               </p>
-              <div className={`flex items-center ml-2 text-xs font-bold ${isWithinWarranty ? 'text-[#2FB600]' : 'text-red-600'}`}>
+              <p className={`flex items-center ml-2 text-xs font-bold ${isWithinWarranty ? 'text-[#2FB600]' : 'text-red-600'}`}>
                 {isWithinWarranty ? 'Na Garantia  ' : 'Fora da Garantia'}
                 {isWithinWarranty ? <Check className='text-lg ml-1' /> : <X className='text-lg ml-1'/>}
-              </div>
+              </p>
             </div>
           <button onClick={downloadImage} className=" bg-blue-500 text-white p-2 rounded-md flex items-center hover:bg-blue-600">
             <DownloadSimple className="w-5 h-5" />

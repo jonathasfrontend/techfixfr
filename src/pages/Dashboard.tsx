@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { destroyCookie, parseCookies } from "nookies";
 import { useNavigate } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as Menubar from "@radix-ui/react-menubar";
 import { CircleNotch, Plus, SignOut } from '@phosphor-icons/react';
 import { api } from '../services/api';
 import { Card } from '../components/Card';
@@ -62,7 +63,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className='min-h-screen bg'>
+    <div className='min-h-screen bg main_dashboard'>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -77,17 +78,39 @@ export default function Dashboard() {
         transition={Bounce}
       />
 
-      <header className='w-full flex items-center justify-between px-16 py-3'>
+      <header className='w-full flex items-center justify-between px-16 py-3 header_dashboard'>
         <div className='w-1/2 flex items-center'>
-          <button className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" onClick={handleSignOut}>
-              <SignOut size={24} />
-          </button>
-          <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
+          <Menubar.Root className="flex items-center justify-center">
+            <Menubar.Menu>
+              <Menubar.Trigger className="">
+                <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
+              </Menubar.Trigger>
+
+              <Menubar.Portal>
+                <Menubar.Content
+                  className="min-w-[220px] rounded-md bg-[#3d3d3d] text-white p-2 shadow-2xl"
+                  sideOffset={5}
+                  alignOffset={-3}
+                >
+                  <Menubar.Item className="h-7 flex items-center rounded hover:bg-[#2b2b2b] p-2 cursor-pointer" onClick={handleSignOut}>
+                    <SignOut size={24} />
+                    <div className="ml-auto pl-5 text-mauve9 group-data-[disabled]:text-mauve8 group-data-[highlighted]:text-white">
+                      Sair
+                    </div>
+                  </Menubar.Item>
+                </Menubar.Content>
+              </Menubar.Portal>
+
+            </Menubar.Menu>
+          </Menubar.Root>
+
           <h1 className='text-2xl text-white font-bold'>Dashboard</h1>
         </div>
 
         <div className='flex items-center justify-between'>
-          <FormSearch />
+          <div className='form_search_dashboard'>
+            <FormSearch />
+          </div>
 
           <div>
             <Dialog.Root>
@@ -102,7 +125,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="relative mt-3 w-full overflow-auto grid-cols-4 grid gap-2 px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+      <div className="relative mt-3 w-full overflow-auto grid-cols-4 grid gap-2 px-16 card_items_dashboard" style={{ maxHeight: "calc(100vh - 6rem)" }}>
         {orders.length > 0 ? (
           orders.map((order) => (
             <Card

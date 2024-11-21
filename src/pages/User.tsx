@@ -57,15 +57,15 @@ export default function User() {
 
   return (
     <div className='min-h-screen bg'>
-      <header className='w-full flex items-center justify-between px-16 py-3'>
-        <div className='w-1/2 flex items-center'>
+      <header className='w-full flex items-center justify-between px-16 py-3 header_user'>
+        <div className='w-1/2 flex items-center header_user_content'>
         <Link to={'/dashboard'}>
-          <div className="bg-white mr-5 p-3 rounded-lg hover:bg-[#ffffffc6]" >
+          <div className="text-white p-2 hover:text-[#ffffffc6]" >
             <CaretLeft size={24} />
           </div>
         </Link>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
-          <h1 className='text-2xl flex items-center text-white font-bold'><IconUser />{cliente?.nome}</h1>
+          <h1 className='text-2xl flex items-center text-white font-bold header_user_content_text_user'>{cliente?.nome}</h1>
         </div>
 
         <div className='flex items-center justify-between'>
@@ -91,7 +91,7 @@ export default function User() {
         </div>
       </header>
 
-      <div className="relative mt-3 w-full overflow-auto px-16" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+      <div className="relative mt-3 w-full overflow-auto px-16 content_acordeon_user" style={{ maxHeight: "calc(100vh - 6rem)" }}>
 
         {cliente && ordens.length > 0 ? (
           ordens.map((ordem) => (

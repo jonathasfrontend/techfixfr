@@ -32,7 +32,7 @@ export default function Login() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center flex-col py-12 px-4 bg">
+    <div className="relative min-h-screen flex items-center justify-center flex-col py-12 px-4 bg main_login">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -47,14 +47,14 @@ export default function Login() {
         transition={Bounce}
       />
 
-      <header className="absolute top-0 left-0 w-full flex items-center justify-between px-16 py-3">
-        <div className='w-1/2 flex items-center'>
+      <header className="absolute top-0 left-0 w-full flex items-center justify-between px-16 py-3 header_login">
+        <div className='w-1/2 flex items-center content_header_login'>
           <img src={logo} className='w-10 h-10 rounded-full border-[2px] mr-3 border-solid border-green-600' alt="" />
           <h1 className='text-2xl text-white font-bold'>Tech Fix FR</h1>
         </div>
       </header>
 
-      <form className="w-[350px] gap-3" onSubmit={handleSubmit(handleSignIn)}>
+      <form className="w-[350px] gap-3 form_login" onSubmit={handleSubmit(handleSignIn)}>
         <h2 className="font-bold text-green-200 text-2xl">
           Acesse sua conta
         </h2>
